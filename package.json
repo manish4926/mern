@@ -1,10 +1,30 @@
 {
+  "name": "nodepractice",
+  "version": "1.0.0",
+  "description": "",
+
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
   "dependencies": {
+    "chalk": "^5.3.0",
+    "commander": "^11.1.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
+    "express-session": "^1.17.3",
     "express-validator": "^7.0.1",
+    "inquirer": "^9.2.11",
     "mongodb": "^6.2.0",
     "mongoose": "^7.6.3",
-    "socket.io": "^4.7.2"
+    "multer": "^1.4.5-lts.1",
+    "nanoid": "^5.0.2",
+    "ora": "^7.0.1",
+    "pdfkit": "^0.13.0",
+    "socket.io": "^4.7.2",
+    "sortablejs": "^1.15.0",
+    "devstart": "nodemon ./bin/www"
   }
 }
+
+  

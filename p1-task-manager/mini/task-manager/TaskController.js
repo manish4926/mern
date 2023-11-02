@@ -7,9 +7,9 @@ class TaskController {
     this.TaskManager = new TaskManager();
   }
 
-  getTaskList = async (req, res) => {
+  getTaskList = asyncWrapper(async (req, res) => {
     // List all tasks
-    try {
+    
       const getData = await this.TaskManager.TaskManagerModel.find({});
       console.log(getData);
       if (!getData) {
@@ -17,10 +17,7 @@ class TaskController {
         return res.status(500).json({ msg: "No data found" });
       }
       return res.status(200).json({ getData });
-    } catch (error) {
-      return res.status(500).json({ msg: error });
-    }
-  };
+  });
 
   createTask = async (req, res) => {
     // Create new task
@@ -34,22 +31,43 @@ class TaskController {
     }
   };
 
-  getTaskById = (req, res) => {
+  getTaskById = async (req, res) => {
     // Get Single Task
-    res.send("Get Task By Id");
+    let {id:TaskId} = req.params;
+    try {
+      const task = await this.TaskManager.TaskManagerModel.findOne({_id: TaskId});
+      if(!task) {
+        return res.status(404).json({ msg: "Task not found" });  
+      }
+      return res.status(200).json({ task });
+    } catch (error) {
+      return res.status(500).json({ msg: error });
+    }
   };
 
-  updateTask = (req, res) => {
+  updateTask = async (req, res) => {
     // Update Single Task
-    res.send("update task");
+    let {id:TaskId} = req.params;
+    let data = req.body;
+    try {
+      const task = await this.TaskManager.TaskManagerModel.findOneAndUpdate( {_id: TaskId}, data );
+      if(!task) {
+        return res.status(404).json({ msg: `Invalid Task Id ${TaskId }` });  
+      }
+      return res.status(200).json({ task });
+    } catch (error) {
+      return res.status(500).json({ msg: error });
+    }
   };
 
   deleteTask = async (req, res) => {
     // Delete Single Task
-    let data = req.body;
+    let {id:TaskId} = req.params;
     try {
-      console.log(data);
-      const task = await this.TaskManager.TaskManagerModel.deleteOne( data );
+      const task = await this.TaskManager.TaskManagerModel.findOneAndDelete( {_id: TaskId} );
+      if(!task) {
+        return res.status(404).json({ msg: `Invalid Task Id ${TaskId }` });  
+      }
       return res.status(200).json({ task });
     } catch (error) {
       return res.status(500).json({ msg: error });

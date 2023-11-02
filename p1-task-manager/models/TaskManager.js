@@ -12,7 +12,18 @@ class TaskManager {
     
 
     constructor() {
-        this.TaskManagerSchema = new mongoose.Schema({ name: String });
+        this.TaskManagerSchema = new mongoose.Schema({ 
+            name: {
+                type : String,
+                required: [true, "Validation Message"],
+                trim: true,
+                maxlength: [20, "name can not be greater than 20 chars."]
+            } ,
+            is_completed: {
+                type: Boolean,
+                default: false
+            }
+        });
         this.TaskManagerModel = mongoose.model('task_manager', this.TaskManagerSchema);
 
 
