@@ -1,15 +1,16 @@
-const mongoose = require("mongoose");
-const TaskManager = require("./../../models/TaskManager");
+// const mongoose = require("mongoose");
+// const TaskManager = require("./../../models/TaskManager");
 
 class TaskController {
   constructor() {
     //this.TaskManagerModel = mongoose.model('TaskManager', new mongoose.Schema({}, { strict: false }));
-    this.TaskManager = new TaskManager();
+    //this.TaskManager = new TaskManager();
   }
 
-  getTaskList = asyncWrapper(async (req, res) => {
+  getTaskList = async (req, res) => {
     // List all tasks
-    
+    console.log('testign');
+    return res.status(200).json({ hello:"test" })
       const getData = await this.TaskManager.TaskManagerModel.find({});
       console.log(getData);
       if (!getData) {
@@ -17,7 +18,7 @@ class TaskController {
         return res.status(500).json({ msg: "No data found" });
       }
       return res.status(200).json({ getData });
-  });
+  };
 
   createTask = async (req, res) => {
     // Create new task

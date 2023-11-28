@@ -2,10 +2,10 @@
   "name": "nodepractice",
   "version": "1.0.0",
   "description": "",
-
-  "main": "server.js",
+  "type": "commonjs",
+  "main": "p2/server.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "nodemon p2/server.js"
   },
   "dependencies": {
     "chalk": "^5.3.0",
