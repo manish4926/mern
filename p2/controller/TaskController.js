@@ -8,9 +8,8 @@ class TaskController {
     }
 
     getData = (req, res) => {
-        console.log("Test Route");
         //const getData = mongoose.
-        return res.status(200).json({ "test":'response' });
+        return res.status(200).json({ "test":'response 1' });
     }
 
     createData = (req, res) => {

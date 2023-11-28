@@ -11,7 +11,7 @@ const TaskControllerObj = require('../controller/TaskController');
 // });
 
 
-router.route('/tasks').get(TaskControllerObj.getData);
+router.route('/').get(TaskControllerObj.getData);
 
 
 

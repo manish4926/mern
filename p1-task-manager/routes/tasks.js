@@ -5,7 +5,7 @@ const TaskController = require('./../mini/task-manager/TaskController');
 
 // router.use(cors);
 
-router.route('/tasks').get(TaskController.getTaskList);
+router.route('/').get(TaskController.getTaskList);
 
 router.route('/tasks').post(TaskController.createTask);
 
