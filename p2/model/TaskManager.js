@@ -4,7 +4,7 @@ class TaskManager {
     //create object variable
     TABLE = "task_manager";
 
-    ID = "id";
+    ID = "_id";
     TITLE = "title";
     DESCRIPTION = "description";
     IS_COMPLETED = "is_completed";
@@ -25,5 +25,8 @@ class TaskManager {
                 default : false
             }
         })
+        this.TaskManagerModel = mongoose.model(this.TABLE, this.TaskManagerSchema);
     }
 }
+
+module.exports = TaskManager;

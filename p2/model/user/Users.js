@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 
 class Users {
     //create object variable
-    ID  = "id";
+    ID  = "_id";
     NAME = "name";
     FIRST_NAME = "first_name";
     LAST_NAME = "last_name";
@@ -31,6 +31,8 @@ class Users {
 
     LABEL_STATUS_TEMPORARY_BLOCKED = "TEMPORARY_BLOCKED";
     LABEL_STATUS_PERMANENT_BLOCKED = "PERMANENT_BLOCKED";
+
+    EMAIL_LIMIT = 2;
     
 
     constructor() {
@@ -64,15 +66,22 @@ class Users {
                 required: [true, "Name is Mandatory"],
             },
             status: {
-                type: Int32Array,
+                type: Number,
                 default: 0
             },
-            created_at: {
-                type: DateTime
-            },
-            updated_at: {
-                type: DateTime
-            }
+
+            // created_at: {
+            //     type: Da
+            // },
+            // updated_at: {
+            //     type: DateTime
+            // }
+        }, {
+            timestamps: true
         })
     }
 }
+
+const UsersModel = new Users();
+
+module.exports = UsersModel;

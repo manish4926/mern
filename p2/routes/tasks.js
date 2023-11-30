@@ -11,7 +11,11 @@ const TaskControllerObj = require('../controller/TaskController');
 // });
 
 
-router.route('/').get(TaskControllerObj.getData);
+router.route('/').get(TaskControllerObj.getDataAll);
+router.route('/').post(TaskControllerObj.createData);
+router.route('/:id').get(TaskControllerObj.getSingleData);
+router.route('/:id').patch(TaskControllerObj.updateDataById);
+router.route('/:id').delete(TaskControllerObj.deleteDataById);
 
 
 
