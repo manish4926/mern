@@ -23,6 +23,7 @@ class User extends Module{
                 [Users.MOBILE] : mobile,
                 [Users.PASSWORD] : password,
                 [Users.STATUS] : Users.STATUS_ACTIVE
+                //TOdo Create Authorization Token & Reminder Token (used for cookies)
                 //[Users.CREATED_AT]: this.currentDateTime1
             };
 

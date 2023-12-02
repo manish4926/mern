@@ -7,6 +7,6 @@ class Controller {
     
 }
 
-const ControllerCls = new Controller();
+//const ControllerCls = new Controller();
 
-module.exports = ControllerCls;
+module.exports = Controller;
