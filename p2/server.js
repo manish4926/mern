@@ -8,6 +8,8 @@ const CorsMiddleware = require('./middleware/cors');
 //const api  = require('./routes/api');
 const tasks  = require('./routes/tasks');
 const users  = require('./routes/users');
+const contact  = require('./routes/contact');
+const errorHandler = require('./middleware/errorHandler');
 
 
 const port = process.env.SERVER_PORT; ///from env;
@@ -26,8 +28,13 @@ app.use('/api/v1/user', users);
 //Task Manager Apis
 app.use('/api/v1/tasks', tasks);
 
+//Contact Manager Apis
+app.use('/api/v1/contact', contact);
+
+
 
 app.use(notFoundMiddleware);
+app.use(errorHandler);
 
 app.listen(port, console.log(`Server connected to port ${port}....`));
 
