@@ -1,4 +1,5 @@
 const Constants = require('./../constants');
+const Validator = require('validator');
 
 class Controller {
     constructor() {

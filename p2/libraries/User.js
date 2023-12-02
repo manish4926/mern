@@ -1,32 +1,39 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const Users = require('./../model/user/Users');
+const Module = require('./Module');
 
-class User {
-    // constructor() {
-    //     var datetime = new Date();
-    //     let newdate = datetime.getDate+" "+datetime.getTime;
-    //     console.log(newdate);
-    // }
+class User extends Module{
+    constructor() {
+        super();
+        
+    }
     
 
     createGeneralUser = async (first_name, last_name, user_name, email, mobile, password) => {
-        // ToDo: Encrypt Password
-        var datetime = new Date();
         try {
+            
+            
             let data =  {
                 [Users.FIRST_NAME] : first_name,
                 [Users.LAST_NAME] : last_name,
+                [Users.NAME] : first_name+ " " + last_name,
                 [Users.USER_NAME] : user_name,
                 [Users.EMAIL] : email,
                 [Users.MOBILE] : mobile,
                 [Users.PASSWORD] : password,
-                [Users.STATUS] : Users.LABEL_STATUS_ACTIVE
-                //[Users.CREATED_AT]: datetime.getDate+" "+datetime.getTime 
+                [Users.STATUS] : Users.STATUS_ACTIVE
+                //[Users.CREATED_AT]: this.currentDateTime1
             };
 
+            const user = Users.Model.create(data);
+
+            //if created - create role
+
+            return this.success_response(data);
+
         } catch (error) {
-            return res.status(500).json({'msg': error });
+            return this.error_response(500, error);
         }
     }
 

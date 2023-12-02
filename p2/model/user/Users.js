@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 
 class Users {
+
+    TABLE = "users";
+
     //create object variable
     ID  = "_id";
     NAME = "name";
@@ -37,51 +40,54 @@ class Users {
 
     constructor() {
         //create schema
-        this.UserSchema = new mongoose.Schema({
-            name: {
+        this.Schema = new mongoose.Schema({
+            [this.NAME]: {
                 type: String,
                 trim:  true,
                 required: [true, "Name is Mandatory"],
                 maxlength: [40, "Name can not exceed 40 limit"],
             } ,
-            first_name : {
+            [this.FIRST_NAME] : {
                 type: String
             },
-            last_name : {
+            [this.LAST_NAME] : {
                 type: String
             },
-            username : {
+            [this.USER_NAME] : {
                 type: String,
                 required: [true, "User Name is Mandatory"],
             },
-            email : {
+            [this.EMAIL] : {
                 type: String,
                 maxlength: [40, "Email can not exceed 40 limit"],
-                required: [true, "Name is Mandatory"],
+                required: [true, "Email is Mandatory"],
             },
-            mobile : {
-                type: String,
-                maxlength: [10, "Email can not exceed 10 limit"],
-                minlength: [10, "Email can not exceed 10 limit"],
-                required: [true, "Name is Mandatory"],
+            [this.MOBILE] : {
+                type: Number,
+                maxlength: [10, "Mobile No. can not exceed 10 digits"],
+                minlength: [10, "Mobile No. can not less than 10 digits"],
+                required: [true, "Mobile No. Mandatory"],
             },
-            status: {
+            [this.STATUS]: {
                 type: Number,
                 default: 0
             },
 
-            // created_at: {
+            // [this.CREATED_AT]: {
             //     type: Da
             // },
-            // updated_at: {
+            // [this.UPDATED_AT]: {
             //     type: DateTime
             // }
         }, {
             timestamps: true
         })
+
+        this.Model = mongoose.model(this.TABLE, this.Schema);
     }
 }
 
+//const UsersSchema = mongoose.model(this.TABLE, new mongoose.Schema({}, {strict:false}));
 const UsersModel = new Users();
 
 module.exports = UsersModel;
