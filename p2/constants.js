@@ -5,6 +5,11 @@ class Constants {
 
     //Record
     RECORD_NOT_FOUND = "Record Not Found";
+    RECORD_UPDATED_SUCCESSFULLY = "Record Updated Successfully";
+    RECORD_UPDATED_DELETED = "Record Updated Deleted";
+
+    //Default
+    SOMETHING_WENT_WRONG = "Something Went Wrong";
 }
 
 const ConstantsLib = new Constants();

@@ -1,5 +1,6 @@
 const Constants = require('./../constants');
-const Validator = require('validator');
+//const Validator = require('validator');
+const Validation = require('./../core/CustomValidator');
 
 class Controller {
     constructor() {
@@ -7,7 +8,7 @@ class Controller {
         this.Validator = Validator;
     }
 
-    success_response = (req, res, data) => {
+    success_response = (req, res, data, msg="") => {
         return res.status(200).json({"data":data});
     }
 
@@ -22,6 +23,8 @@ class Controller {
     error_response = (req, res, msg, errCode) => {
         return res.status(errCode).json({"msg":msg});
     }
+
+    validator = Validation;
     
 }
 
