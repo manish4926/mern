@@ -23,6 +23,8 @@ class UserController extends Controller {
         if (validator.fails()) {
             //return validation error
 			//return $this->returnValidationErrors($Validator, 'Invalid data');
+            res.status(400);
+            throw new Error("All fields are mandatory");
 		}
         //Check if user exist
         //register user
