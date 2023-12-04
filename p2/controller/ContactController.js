@@ -3,6 +3,7 @@ const asyncHandler = require('express-async-handler');
 const Contacts = require('./../model/Contacts');
 const Controller = require('./Controller');
 
+
 class Contact extends Controller{
     constructor() {
         super();
@@ -18,20 +19,19 @@ class Contact extends Controller{
 
     createContact = asyncHandler(async(req, res) => {
         //check validation for id, first_name, last_name, email, mobile no
-        let validator = {
-            'first_name'    : 'string|maxlength:40',
-            'last_name'     : 'string|maxlength:40',
-            'user_name'     : 'string|maxlength:40',
-            'email'         : 'email|maxlength:40',
-            'mobile'        : 'mobile',
-            'password'      : 'string|maxlength:40',
+        let validation = {
+            'first_name'    : 'required|string|maxlength:40',
+            'last_name'     : 'required|string|maxlength:40',
+            'email'         : 'email|maxlength:40',//use regex
+            'mobile'        : 'required|mobile', //use regex
         }
-        this.validator.make(req, res, validator);
-        if (this.validator.fails()) {
+
+        this.Validator.make(req, res, validation);
+        /*if (this.Validator.fails()) {
             //return validation error
 			//return $this->returnValidationErrors($Validator, 'Invalid data');
             res.status(400);
-            throw new Error("All fields are mandatory");
+            throw new Error(this.Validator.message);
 		}
 
         let data = {
@@ -45,7 +45,8 @@ class Contact extends Controller{
         if(!contact) {
             return this.msg_response(req, res, this.Constants.SOMETHING_WENT_WRONG);
         }
-        return this.success_response(req, res, contact, this.Constants.RECORD_UPDATED_SUCCESSFULLY);
+        return this.success_response(req, res, contact, this.Constants.RECORD_UPDATED_SUCCESSFULLY);*/
+        return this.msg_response(req, res, this.Constants.RECORD_UPDATED_SUCCESSFULLY);
     })
 
     updateContact = asyncHandler(async(req, res) => {
