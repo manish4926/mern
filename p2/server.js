@@ -18,6 +18,8 @@ const app = express();
 app.use(express.json());
 app.use(CorsMiddleware);
 
+// Initialize a single instance for the whole app
+
 
 // Core Apis
 //app.use('/api/v1/core', api);

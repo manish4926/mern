@@ -2,6 +2,7 @@ const express = require('express');
 const asyncHandler = require('express-async-handler');
 const Contacts = require('./../model/Contacts');
 const Controller = require('./Controller');
+const { CreateLog } = require('../core/Logger');
 
 
 class Contact extends Controller{
@@ -10,6 +11,7 @@ class Contact extends Controller{
     }
 
     getContacts = asyncHandler(async(req, res) => {
+        //CreateLog("Test title", "hello manish & world");
         let contacts = Contacts.ContactsModel.find({});
         if(!contacts) {
             return this.msg_response(req, res, this.Constants.TASK_NOT_FOUND);

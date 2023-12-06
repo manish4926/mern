@@ -6,9 +6,7 @@ const Constants = require('./../constants');
 class TaskController{
     constructor() {
         //super();
-        this.TaskManagerModel = mongoose.model('TaskManager', new mongoose.Schema({}, { strict: false }));
         this.TaskManager = new TaskManager();
-        //this.constants = new Constants();
     }
 
     getDataAll = async (req, res) => {
