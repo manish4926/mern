@@ -12,15 +12,15 @@ class Controller {
     }
 
     msg_response = (req, res, msg) => {
-        return res.status(401).json({"msg":msg});
+        return res.status(401).json({"message":msg});
     }
 
     validation_response = (req, res, msg) => {
-        return res.status(400).json({"msg":msg});
+        return res.status(400).json({"message":msg});
     }
 
     error_response = (req, res, msg, errCode) => {
-        return res.status(errCode).json({"msg":msg});
+        return res.status(errCode).json({"message":msg});
     }    
 }
 
