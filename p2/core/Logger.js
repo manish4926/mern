@@ -1,4 +1,5 @@
 const { WebClient } = require('@slack/web-api');
+//const fetch = require('node-fetch').default;
 
 const Logger = (title, message) => {
     
@@ -41,6 +42,36 @@ const Slack = (title, message) => {
 
 const Telegram = (title, message) => {
     // Website not working now
+//     const botToken = process.env.TELEGRAM_TOKEN;
+//     const chatId = '+iiBu3J9iUY9hZTU1';
+//     const messageText = 'Hello, this is a test message from your Telegram bot!';
+//     const apiUrl = `https://api.telegram.org/bot${botToken}/sendMessage`;
+
+//     const params = {
+//         chat_id: chatId,
+//         text: messageText,
+//       };
+
+      
+//     // Make the API request to send the message
+//     fetch(apiUrl, {
+//         method: 'POST',
+//         headers: {
+//         'Content-Type': 'application/json',
+//         },
+//         body: JSON.stringify(params),
+//     })
+//     .then(response => response.json())
+//     .then(data => {
+//       if (data.ok) {
+//         console.log('Message sent successfully!');
+//       } else {
+//         console.error(`Error: ${data.description}`);
+//       }
+//     })
+//     .catch(error => {
+//       console.error(`Error: ${error.message}`);
+//     });
 }
 
 module.exports = {Logger, CreateLog};
