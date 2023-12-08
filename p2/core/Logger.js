@@ -148,8 +148,8 @@ const Slack = (title, message) => {
 
 
     if(data.stackTrace) {
-        let jsonDataString = JSON.stringify(data.stackTrace, null, 2); 
-        let formattedDataData = "```json\n" + jsonDataString + "\n```";
+        //let jsonDataString = JSON.stringify(data.stackTrace, null, 2); 
+        //let formattedDataData = "```json\n" + jsonDataString + "\n```";
         content.blocks.push({
             "type": "rich_text",
             "elements": [
@@ -171,7 +171,7 @@ const Slack = (title, message) => {
             "type": "section",
             "text": {
                 "type": "mrkdwn",
-                "text": formattedDataData
+                "text": data.stackTrace
             }
         });
     }
