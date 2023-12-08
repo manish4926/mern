@@ -25,15 +25,166 @@ const Slack = (title, message) => {
     const token = process.env.SLACK_TOKEN;
     const conversationId = process.env.SLACK_CHANNEL_ID;
     const web = new WebClient(token);    
+    const data = message.data;
+    const jsonString = JSON.stringify(data, null, 2); 
+    const formattedCodeBlock = "```json\n" + jsonString + "\n```";
+    if(!data.status) {
+        data.status = "UNKNOWN";
+    }
+    //console.log(data);
+    let content = {
+        "text" : "ERROR",
+        "blocks": [
+            {
+                "type": "rich_text",
+                "elements": [
+                    {
+                        "type": "rich_text_section",
+                        "elements": [
+                            {
+                                "type": "text",
+                                "text": "Error | " + data.status,
+                                "style": {
+                                    "bold": true
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+        
+    };
+
+    
+
+    if(data.url) {
+        content.blocks.push(
+            {
+            "type": "rich_text",
+            "elements": [
+                {
+                    "type": "rich_text_section",
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": "URL",
+                            "style": {
+                                "bold": true
+                            }
+                        }
+                    ]
+                }
+            ]
+            },
+            {
+                "type": "section",
+                "text": {
+                    "type": "plain_text",
+                    "text": data.url,
+                    "emoji": true
+                }
+            });
+    }
+
+    
+
+    if(data.message) {
+        content.blocks.push({
+            "type": "rich_text",
+            "elements": [
+                {
+                    "type": "rich_text_section",
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": "Content",
+                            "style": {
+                                "bold": true
+                            }
+                        }
+                    ]
+                }
+            ]
+            },
+            {
+                "type": "section",
+                "text": {
+                    "type": "plain_text",
+                    "text": data.message,
+                    "emoji": true
+                }
+            });
+    }
+
+    if(!Object.keys(data.request).length === 0) {
+        let jsonRequestString = JSON.stringify(data.request, null, 2); 
+        let formattedRequestData = "```json\n" + jsonRequestString + "\n```";
+        content.blocks.push({
+            "type": "rich_text",
+            "elements": [
+                {
+                    "type": "rich_text_section",
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": "Request",
+                            "style": {
+                                "bold": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": formattedRequestData
+            }
+        });
+    }
+
+
+    if(data.stackTrace) {
+        let jsonDataString = JSON.stringify(data.stackTrace, null, 2); 
+        let formattedDataData = "```json\n" + jsonDataString + "\n```";
+        content.blocks.push({
+            "type": "rich_text",
+            "elements": [
+                {
+                    "type": "rich_text_section",
+                    "elements": [
+                        {
+                            "type": "text",
+                            "text": "StackTrace",
+                            "style": {
+                                "bold": true
+                            }
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "type": "section",
+            "text": {
+                "type": "mrkdwn",
+                "text": formattedDataData
+            }
+        });
+    }
+    
+    content.channel = conversationId;
+
+    console.log(content);
 
     (async () => {
 
         // Post a message to the channel, and await the result.
         // Find more arguments and details of the response: https://api.slack.com/methods/chat.postMessage
-        const result = await web.chat.postMessage({
-            text: message,
-            channel: conversationId,
-        });
+        const result = await web.chat.postMessage(content);
 
         // The result contains an identifier for the message, `ts`.
         //console.log(`Successfully send message ${result.ts} in conversation ${conversationId}`);

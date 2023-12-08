@@ -37,7 +37,7 @@ const errorHandler = (err, req, res, next) => {
                     message : err.message,
                     stackTrace: err.stack
                 });
-                Logger.Logger("Error Log", {status:statusCode,url:url, request:req.body, data: { message: err.message, stackTrace: err.stack}});
+                Logger.Logger("Unauthorized Access Error Log", {data: { status:statusCode,url:url.href, request:req.body, message: err.message, stackTrace: err.stack}});
                 //TODO trace the ip address and attemps to block it
                 break;
             case Constants.FORBIDDEN_ERROR:
@@ -46,7 +46,7 @@ const errorHandler = (err, req, res, next) => {
                     message : err.message,
                     stackTrace: err.stack
                 });
-                Logger.Logger("Error Log", {status:statusCode,url:url, request:req.body, data: { message: err.message, stackTrace: err.stack}});
+                Logger.Logger("Forbidden Error Log", {data: { status:statusCode,url:url.href, request:req.body, message: err.message, stackTrace: err.stack}});
                 break;
             case Constants.SERVER_ERROR:
                 res.json ({
@@ -54,7 +54,7 @@ const errorHandler = (err, req, res, next) => {
                     message : err.message,
                     stackTrace: err.stack
                 });
-                Logger.Logger("Error Log", {status:statusCode,url:url, request:req.body, data: { message: err.message, stackTrace: err.stack}});
+                Logger.Logger("Server Error Log", {data: { status:statusCode,url:url.href, request:req.body, message: err.message, stackTrace: err.stack}});
                 break;
         }
         
