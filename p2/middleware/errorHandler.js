@@ -6,7 +6,7 @@ const errorHandler = (err, req, res, next) => {
     let statusCode = res.statusCode ? res.statusCode : Constants.SERVER_ERROR;
 
     if (err instanceof ValidationError) {
-        //res.status(err.statusCode).json({title: 'ValidationError', message: err.message, stackTrace: err.stack});
+        res.status(err.statusCode).json({title: 'ValidationError', message: err.message, stackTrace: err.stack});
     } 
     if (err instanceof ReferenceError || err instanceof SyntaxError) {
         res.statusCode = Constants.SERVER_ERROR;

@@ -23,6 +23,10 @@ class Validator{
         this.getObjectFromArray();
     }
 
+    fail = () => {
+        return false;   //currently only occured in case of validation success
+    }
+
     defineVariables(req, res, validator) {
         this.req = req;
         this.res = res;
@@ -48,6 +52,7 @@ class Validator{
 
     is_required(key,value) {
         ////if(ValidatorCore.isEmpty(value)) {
+        //console.log(key, value);
         if(!value) {
             this.message = `${key} can not be empty.`;
             throw new ValidationError(this.message);
@@ -83,32 +88,40 @@ class Validator{
     getObjectFromArray = () => {
         //console.log(this.req.body);
         const responseBody = this.req.body;
-        //console.log(responseBody['first_name']);
+        let validatorArr = this.validatorArr;
 
-        for(let element in this.validatorArr){
-            let indexName = element;
+        //for(let element in this.validatorArr){
+        for (let element in validatorArr) {
+            let indexName = element;    
             let requirement = this.validatorArr[element];
             let requirementArr = this.splitParams(requirement);
             
-            requirementArr.forEach(filter => {
+            //requirementArr.forEach(filter => {
+            for (let filterIndx in requirementArr) {
+                let filter = requirementArr[filterIndx];
+                responseBody[element] = responseBody[element] ? responseBody[element] : null;
                 if(filter.includes(":")) {
-                    //console.log("colon found");
+                    console.log("colon found");
                 }
                 else {
                     switch(filter) {
                         case 'required':
                             //console.log(element, responseBody[element]);
                             this.is_required(indexName, responseBody[element]);
+                            break;
                         case 'string':
                             this.is_string(indexName, responseBody[element]);
+                            break;
                         default: 
                             //TODO add to log
                             console.log("Validator not found");
                     }
                 }
                 
-            });
+            };
+            
         };
+        return "success";
     }
 }
 

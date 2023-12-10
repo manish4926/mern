@@ -18,6 +18,10 @@ class Constants {
     NOT_FOUND_ERROR     = 404;
     SERVER_ERROR        = 500;
 
+    //Response
+    INVALID_INPUT = "Invalid Input";
+    INVAID_ID   = "Invalid ID";
+
 }
 
 const ConstantsLib = new Constants();

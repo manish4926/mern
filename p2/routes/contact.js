@@ -6,6 +6,8 @@ router.route('/').get(ContactObj.getContacts);
 
 router.route('/').post(ContactObj.createContact);
 
+router.route('/:id').get(ContactObj.getContactsById);
+
 router.route('/:id').put(ContactObj.updateContact);
 
 router.route('/:id').delete(ContactObj.deleteContact);
