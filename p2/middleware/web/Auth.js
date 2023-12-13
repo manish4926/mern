@@ -1,7 +1,9 @@
 const jwt = require('jsonwebtoken');
-const Users = require('./../model/user/Users');
-const UserRole = require('./../model/user/UserRoles');
-
+const Users = require('./../../model/user/Users');
+const UserRole = require('./../../model/user/UserRoles');
+//const getUserFromToken = require("../getUserFromToken");
+const CORS = require('../CORS'); 
+const asyncWrapper = require('../asyncWrapper');
 
 
 const authenticateToken = (req, res, next) => {
@@ -41,6 +43,20 @@ const authorizeRole = (role) => {
 //     }
 // }
 
+
+
+const setCurrentUser = (req, res, next) => {
+    const token = req.header("authorization");
+  
+    // look up the user based on the token
+    // const user = getUserFromToken(token).then(user => {
+    //   // append the user object the the request object
+    //   req.user = user;
+  
+    //   next();
+    // });
+    next();
+};
 
 
 const testMiddleWare = (req, res, next) => {

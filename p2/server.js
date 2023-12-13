@@ -2,7 +2,6 @@ const express = require('express');
 require('dotenv').config();
 const DB = require('./config/db');
 const notFoundMiddleware = require('./middleware/not-found');
-const CorsMiddleware = require('./middleware/cors');
 
 //Route Importing
 //const api  = require('./routes/api');
@@ -16,7 +15,6 @@ const port = process.env.SERVER_PORT; ///from env;
 const app = express();
 
 app.use(express.json());
-app.use(CorsMiddleware);
 
 // Initialize a single instance for the whole app
 

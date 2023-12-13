@@ -8,7 +8,7 @@ const webGroup = (req, res, next) => {
     // TODO Check device token
     // TODO Cors
     // TODO Check for secret key if login not required
-
+    testMiddleWare(req, res, next);
     next();
 }
 
@@ -26,4 +26,4 @@ const webAuthGroup = (req, res, next) => {
 
 
 //module.exports = { authenticateToken, authorizeRole, testMiddleWare };
-module.exports = {web, webAuth};
+module.exports = {webGroup, webAuthGroup};
