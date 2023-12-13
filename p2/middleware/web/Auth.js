@@ -1,18 +1,8 @@
-
-
-// user.permissions.forEach(permission => {
-//     if (options.allowedGroup.indexOf(permission)){
-//         // if authenticated
-//         return next();
-//     }
-// }
-
-
-//Send permissions and current role with login data login success
-
-
 const jwt = require('jsonwebtoken');
-const { User, UserRole } = require('./models');
+const Users = require('./../model/user/Users');
+const UserRole = require('./../model/user/UserRoles');
+
+
 
 const authenticateToken = (req, res, next) => {
   const token = req.header('Authorization');
@@ -21,7 +11,7 @@ const authenticateToken = (req, res, next) => {
   jwt.verify(token, 'your_secret_key', async (err, user) => {
     if (err) return res.status(403).json({ message: 'Invalid token' });
 
-    req.user = await User.findById(user.userId);
+    req.user = await Users.findById(user.userId);
     next();
   });
 };
@@ -43,4 +33,19 @@ const authorizeRole = (role) => {
   };
 };
 
-module.exports = { authenticateToken, authorizeRole };
+//TODO Send permissions and current role with login data login success
+// user.permissions.forEach(permission => {
+//     if (options.allowedGroup.indexOf(permission)){
+//         // if authenticated
+//         return next();
+//     }
+// }
+
+
+
+const testMiddleWare = (req, res, next) => {
+  console.log("test middleware");
+  next();
+};
+
+module.exports = { authenticateToken, authorizeRole, testMiddleWare };

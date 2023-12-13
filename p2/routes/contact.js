@@ -1,14 +1,16 @@
 const express = require('express');
 const router = express.Router();
 const ContactObj = require('./../controller/ContactController');
-const { authenticateToken, authorizeRole } = require('./middleware');
+//const { authenticateToken, authorizeRole,testMiddleWare } = require('./../middleware/Auth');
+const {web} = require('./../middleware/webGroup');
+
 
 // router.get('/user/:id', auth({allowedGroup: readGroup}), asyncHandler(async(req, res, next) => {
 //     ... // your stuff here
 //     res.status(200).json(data);
 // })) 
 
-router.route('/').get(ContactObj.getContacts);
+router.route('/').all(web).get(ContactObj.getContacts);
 
 router.route('/').post(ContactObj.createContact);
 
