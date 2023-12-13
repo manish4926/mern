@@ -9,6 +9,10 @@ class Roles {
     DESCRIPTION = "description";
     CREATED_AT = "created_at";
     UPDATED_AT = "updated_at";
+
+    ROLE_GENERAL        = "GENERAL";
+    ROLE_ADMIN          = "ADMIN";
+    ROLE_SUPER_ADMIN    = "SUPER_ADMIN";
     
     constructor() {
         //Create Schema
@@ -31,4 +35,14 @@ class Roles {
             }
         })
     }
+
+    //TODO complete this
+
+    // getRoleByName(name) {
+    //     return this.roles.find((role) => role.name === name);
+    //   }
+    
+    //   getRoles() {
+    //     return this.roles;
+    //   }
 }

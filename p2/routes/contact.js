@@ -1,6 +1,12 @@
 const express = require('express');
 const router = express.Router();
 const ContactObj = require('./../controller/ContactController');
+const { authenticateToken, authorizeRole } = require('./middleware');
+
+// router.get('/user/:id', auth({allowedGroup: readGroup}), asyncHandler(async(req, res, next) => {
+//     ... // your stuff here
+//     res.status(200).json(data);
+// })) 
 
 router.route('/').get(ContactObj.getContacts);
 

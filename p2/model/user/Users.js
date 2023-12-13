@@ -85,6 +85,20 @@ class Users {
 
         this.Model = mongoose.model(this.TABLE, this.Schema);
     }
+
+    /**
+     * @DESC Check Role Middleware
+     */
+    //TODO
+    // const checkRole = (roles) => async (req, res, next) => {
+    //     let { name } = req.body;
+    
+    //     //retrieve employee info from DB
+    //     const employee = await Employee.findOne({ name });
+    //     !roles.includes(employee.role)
+    //     ? res.status(401).json("Sorry you do not have access to this route")
+    //     : next();
+    // };
 }
 
 //const UsersSchema = mongoose.model(this.TABLE, new mongoose.Schema({}, {strict:false}));

@@ -13,12 +13,10 @@ class UserRoles {
         //Create Schema
         this.UserRoleSchema = new mongoose.Schema({
             [this.USER_ID] : {
-                type: Int,
-                required: [true, "User ID is Mandatory"]
+                type: mongoose.Schema.Types.ObjectId, ref: 'User'
             }, 
             [this.ROLE_ID] : {
-                type: Int32,
-                required: [true, "Role ID is Mandatory"]
+                type: mongoose.Schema.Types.ObjectId, ref: 'Role'
             },
             [this.CREATED_AT]: {
                 type: DateTime
