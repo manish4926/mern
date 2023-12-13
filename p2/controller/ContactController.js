@@ -3,7 +3,7 @@ const asyncHandler = require('express-async-handler');
 const Contacts = require('./../model/Contacts');
 const Controller = require('./Controller');
 const { CreateLog } = require('../core/Logger');
-
+const {webGroup} = require('./../middleware/webGroup');
 
 class Contact extends Controller{
     constructor() {
@@ -13,6 +13,7 @@ class Contact extends Controller{
     // TODO need to create (web )middleware which handles asyncHandler and Authorization Keys + JWT Tokens
     getContacts = asyncHandler(async(req, res) => {
         let contacts = await Contacts.ContactsModel.find({});
+        ////let contacts = await Contacts.paginate(req, {});
         if(!contacts) {
             return this.msg_response(req, res, this.Constants.RECORD_NOT_FOUND);
         }

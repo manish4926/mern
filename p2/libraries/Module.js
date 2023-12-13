@@ -1,5 +1,11 @@
+const Illuminate = require('./../core/Illuminate');
 
 class Module {
+
+    constructor() {
+        this.Illuminate = Illuminate;
+    }
+
     error_response = (errorCode = 500, errorVal) =>  {
         let res = {
             status : errorCode,

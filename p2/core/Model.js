@@ -6,7 +6,7 @@ class Model {
         this.SchemaValidator = SchemaValidator;
     }
 
-    paginate(req) {
+    paginate(req, params) {
         //create pagination function
     }
 }

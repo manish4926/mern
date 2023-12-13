@@ -2,6 +2,8 @@ const mongoose = require('mongoose');
 
 class UserRoles {
 
+    TABLE = "user_roles";
+
     //object variables
     ID = "id";
     USER_ID = "user_id";
@@ -10,20 +12,18 @@ class UserRoles {
     UPDATED_AT = "updated_at";
     
     constructor() {
-        //Create Schema
-        this.UserRoleSchema = new mongoose.Schema({
-            [this.USER_ID] : {
-                type: mongoose.Schema.Types.ObjectId, ref: 'User'
-            }, 
-            [this.ROLE_ID] : {
-                type: mongoose.Schema.Types.ObjectId, ref: 'Role'
-            },
-            [this.CREATED_AT]: {
-                type: DateTime
-            },
-            [this.UPDATED_AT]: {
-                type: DateTime
-            }
-        })
+
+        this.Model = mongoose.model(this.TABLE, this.Schema);
+        
     }
+
+    //Create Schema
+    Schema = new mongoose.Schema({
+        [this.USER_ID] : {
+            type: mongoose.Schema.Types.ObjectId, ref: 'User'
+        }, 
+        [this.ROLE_ID] : {
+            type: mongoose.Schema.Types.ObjectId, ref: 'Role'
+        }
+    })
 }

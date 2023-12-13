@@ -60,8 +60,11 @@ const setCurrentUser = (req, res, next) => {
 
 
 const testMiddleWare = (req, res, next) => {
-  console.log("test middleware");
-  next();
+  return async (req, res, next) => {
+    console.log("test middleware");
+    next();
+  }
+  
 };
 
 module.exports = { authenticateToken, authorizeRole, testMiddleWare };

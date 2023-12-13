@@ -46,3 +46,5 @@ class Roles {
     //     return this.roles;
     //   }
 }
+
+module.exports = new Roles();

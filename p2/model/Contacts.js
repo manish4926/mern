@@ -17,41 +17,40 @@ class Contacts extends Model {
 
     constructor() {
         super();
-
-        this.ContactsSchema = new mongoose.Schema({
-            [this.FIRST_NAME] : {
-                type        : String,
-                required    : [true, "First Name is Required"],
-                trim        : true,
-                maxlength   : [40, "First Name does not exceed 40 characters"]
-            },
-            [this.LAST_NAME] : {
-                type        : String,
-                required    : [true, "Last Name id Required"],
-                trim        : true,
-                maxlength   : [40, "Last Name does not exceed 40 characters"]
-            },
-            [this.EMAIL] : {
-                type        : String,
-                required    : [true, "Email is Required"],
-                trim        : true,
-                maxlength   : [40, "Email does not exceed 40 characters"]
-            },
-            [this.PHONE] : {
-                type        : Number,
-                required    : [true, "Phone No. is Required"],
-                trim        : true,
-                maxlength   : [10, "Phone No. does not exceed 10 characters"]
-            },
-            [this.WEBSITE] : {
-                type        : String,
-                trim        : true,
-                maxlength   : [100, "Website does not exceed 100 characters"]
-            }
-        });
-        Number
         this.ContactsModel = mongoose.model(this.TABLE, this.ContactsSchema);
     }
+
+    ContactsSchema = new mongoose.Schema({
+        [this.FIRST_NAME] : {
+            type        : String,
+            required    : [true, "First Name is Required"],
+            trim        : true,
+            maxlength   : [40, "First Name does not exceed 40 characters"]
+        },
+        [this.LAST_NAME] : {
+            type        : String,
+            required    : [true, "Last Name id Required"],
+            trim        : true,
+            maxlength   : [40, "Last Name does not exceed 40 characters"]
+        },
+        [this.EMAIL] : {
+            type        : String,
+            required    : [true, "Email is Required"],
+            trim        : true,
+            maxlength   : [40, "Email does not exceed 40 characters"]
+        },
+        [this.PHONE] : {
+            type        : Number,
+            required    : [true, "Phone No. is Required"],
+            trim        : true,
+            maxlength   : [10, "Phone No. does not exceed 10 characters"]
+        },
+        [this.WEBSITE] : {
+            type        : String,
+            trim        : true,
+            maxlength   : [100, "Website does not exceed 100 characters"]
+        }
+    });
     
 }
 

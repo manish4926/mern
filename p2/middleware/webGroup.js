@@ -8,8 +8,9 @@ const webGroup = (req, res, next) => {
     // TODO Check device token
     // TODO Cors
     // TODO Check for secret key if login not required
-    testMiddleWare(req, res, next);
-    next();
+    //testMiddleWare(req, res, next);
+    //next();
+    return next;
 }
 
 

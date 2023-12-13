@@ -10,7 +10,7 @@ const {webGroup} = require('./../middleware/webGroup');
 //     res.status(200).json(data);
 // })) 
 
-router.route('/').get(webGroup, ContactObj.getContacts);
+router.route('/').get(ContactObj.getContacts);
 
 router.route('/').post(ContactObj.createContact);
 
