@@ -20,7 +20,7 @@ class Roles {
         this.Model = mongoose.model(this.TABLE, this.Schema);
     }
 
-    RoleSchema = new mongoose.Schema({
+    Schema = new mongoose.Schema({
         [this.NAME] : {
             type: String,
             trim:  true,

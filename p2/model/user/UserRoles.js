@@ -5,7 +5,7 @@ class UserRoles {
     TABLE = "user_roles";
 
     //object variables
-    ID = "id";
+    ID = "_id";
     USER_ID = "user_id";
     ROLE_ID = "role_id";
     CREATED_AT = "created_at";

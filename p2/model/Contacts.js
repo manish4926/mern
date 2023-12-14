@@ -17,7 +17,7 @@ class Contacts extends Model {
 
     constructor() {
         super();
-        this.ContactsModel = mongoose.model(this.TABLE, this.ContactsSchema);
+        this.Model = mongoose.model(this.TABLE, this.ContactsSchema);
     }
 
     ContactsSchema = new mongoose.Schema({

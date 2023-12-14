@@ -148,7 +148,4 @@ class Users {
     }
 }
 
-//const UsersSchema = mongoose.model(this.TABLE, new mongoose.Schema({}, {strict:false}));
-const UsersModel = new Users();
-
-module.exports = UsersModel;
+module.exports = new Users();

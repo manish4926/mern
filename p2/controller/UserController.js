@@ -1,7 +1,7 @@
 
-const { response } = require('express');
+const express  = require('express');
 const UserUtility = require('./../libraries/User');
-
+const asyncHandler = require('express-async-handler');
 const Controller = require('./Controller');
 
 class UserController extends Controller {
@@ -10,7 +10,7 @@ class UserController extends Controller {
         super();
     }
     
-    createNewUser = async (req, res) => {
+    createNewUser = asyncHandler(async (req, res) => {
         //Check for validations
         let validator = {
             'first_name'    : 'string|maxlength:40',
@@ -33,9 +33,9 @@ class UserController extends Controller {
         let response = await UserUtility.createGeneralUser(req.body.first_name, req.body.last_name, req.body.user_name, req.body.email, req.body.mobile, req.body.password);
     
         return res.status(response.status).json(response.data);
-    }
+    })
 
-    loginUser = async(req, res) => {
+    loginUser = asyncHandler(async(req, res) => {
         let validator = {
             'username'    : 'string|maxlength:40',
             'password'     : 'string|maxlength:40'
@@ -48,13 +48,22 @@ class UserController extends Controller {
 		}
 
         let response = await UserUtility.loginUser(req.body.user_name, req.body.password);
-    }
+    })
 
-    getUsers = (req, res) => {
+    forgotPassword = asyncHandler(async (req,res) => {
+        //TODO user functions
+        return res.status(200).json({ "test":'response 1' });
+    })
+
+    changePassword = asyncHandler(async (req,res) => {
+        //TODO user functions
+        return res.status(200).json({ "test":'response 1' });
+    })
+
+    getUser = asyncHandler( async(req, res) => {
         console.log(res);
         return res.status(200).json({ "test":'response 1' });
-    }
+    })
 }
 
-const UserControllerObj  = new UserController();
-module.exports = UserControllerObj;
+module.exports = new UserController();
