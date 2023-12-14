@@ -15,44 +15,45 @@ class User extends Module{
 
     createGeneralUser = async (first_name, last_name, user_name, email, mobile, password) => {
 
-        let role = Roles.ROLE_GENERAL;
-
-        try {
-            
-            let data =  {
-                [Users.FIRST_NAME] : first_name,
-                [Users.LAST_NAME] : last_name,
-                [Users.NAME] : first_name+ " " + last_name,
-                [Users.USER_NAME] : user_name,
-                [Users.EMAIL] : email,
-                [Users.MOBILE] : mobile,
-                [Users.STATUS] : Users.STATUS_ACTIVE,
-                [Users.ROLE] : role,
-                //TOdo Create Authorization Token & Reminder Token (used for cookies)
-                //[Users.CREATED_AT]: this.currentDateTime1
-            };
-
-            //generate password
-            let encryptedPassword = this.Illuminate.generatePassword(password);
-            data[Users.PASSWORD] = encryptedPassword;
-
-            const user = await Users.Model.create(data);
-
-            if(user) {
-                //if created - create role
-                //TODO Insert data in user roles
-                const role = await UserRoles.Model.create(data);
-            }
-
-
-            
-
-            return this.success_response(user);
-
-        } catch (error) {
-            return this.error_response(500, error);
+        let role = Roles.ROLE_GENERAL;  
+        
+        User = Users.checkUserExistByMultiple(user_name, email, mobile);
+        if(User) {
+            return this.error_response(this.Constants.USER_EXIST, this.Constants.FORBIDDEN_ERROR);
         }
+
+        let data =  {
+            [Users.FIRST_NAME] : first_name,
+            [Users.LAST_NAME] : last_name,
+            [Users.NAME] : first_name+ " " + last_name,
+            [Users.USER_NAME] : user_name,
+            [Users.EMAIL] : email,
+            [Users.MOBILE] : mobile,
+            [Users.STATUS] : Users.STATUS_ACTIVE,
+            [Users.ROLE] : role,
+            //TOdo Create Authorization Token & Reminder Token (used for cookies)
+            //[Users.CREATED_AT]: this.currentDateTime1
+        };
+
+        //generate password
+        data[Users.PASSWORD] = this.Illuminate.generatePassword(password);
+
+        const User = await Users.Model.create(data);
+
+        if(User) {
+            //TODO Insert data in user roles
+            let role = Roles.getRoleByName(Roles.ROLE_GENERAL);
+            const UserRole = await UserRoles.Model.create({
+                [UserRoles.USER_ID] : User[Users.ID],
+                [UserRoles.ROLE_ID] : role.id,
+            });
+        }
+        
+        //TODO create login data in Core/Auth and send it to response
+        return this.success_response(User);
     }
+
+
 
     createUser = async (first_name, last_name, user_name, email, mobile, password) => {
         
@@ -81,24 +82,7 @@ class User extends Module{
         res.json({ token });
     }
 
-    checkUserExist = async (username) => {
-        //TODO check username and mobile and email limit 2
-        const user = await Users.Model.findOne(username);
-
-        if (!user) {
-            return null;
-        }
-        return user;
-
-    }
-
-    checkUserByMobile = async (mobile) => {
-        return true;
-    }
-
-    checkUserByUserName = async (username) => {
-        return true;
-    }
+    
 }
 
 // const UserLib = new User();

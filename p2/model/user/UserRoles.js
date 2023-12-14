@@ -27,3 +27,6 @@ class UserRoles {
         }
     })
 }
+
+
+module.exports = new UserRoles();

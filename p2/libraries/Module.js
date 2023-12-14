@@ -1,12 +1,16 @@
 const Illuminate = require('./../core/Illuminate');
+const Constants = require('./../constants');
+const Helpers = require('../core/Helpers');
 
 class Module {
 
     constructor() {
         this.Illuminate = Illuminate;
+        this.Constants = Constants;
+        this.Helpers = Helpers;
     }
 
-    error_response = (errorCode = 500, errorVal) =>  {
+    error_response = (errorVal, errorCode = 500) =>  {
         let res = {
             status : errorCode,
             data : {msg : errorVal}

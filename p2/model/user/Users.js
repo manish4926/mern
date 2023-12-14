@@ -100,6 +100,52 @@ class Users {
     //     ? res.status(401).json("Sorry you do not have access to this route")
     //     : next();
     // };
+
+    checkUserExist = async (username) => {
+        const user = await Users.Model.findOne({[Users.USER_NAME] : username});
+
+        if (!user) {
+            return null;
+        }
+        return user;
+
+    }
+
+    checkUserExistByMultiple = async (username = null, mobile = null, email = null) => {
+        let obj = {};
+        if(username) {
+            obj[Users.USER_NAME] = username;
+        }
+        if(email) {
+            obj[Users.EMAIL] = email;
+        }
+        if(phone) {
+            obj[Users.MOBILE] = mobile;
+        }
+        const user = await Users.Model.findOne({
+            $or:  [
+                obj
+            ]});
+
+        if (!user) {
+            return null;
+        }
+        return user;
+
+    }
+
+    checkUserByMobile = async (mobile) => {
+        const user = await Users.Model.find({
+            $or: [
+                'mobile'
+            ]}
+        );
+        return true;
+    }
+
+    checkUserByUserName = async (username) => {
+        return true;
+    }
 }
 
 //const UsersSchema = mongoose.model(this.TABLE, new mongoose.Schema({}, {strict:false}));

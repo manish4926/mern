@@ -22,6 +22,9 @@ class Constants {
     INVALID_INPUT = "Invalid Input";
     INVAID_ID   = "Invalid ID";
 
+    //User
+    USER_EXIST = "User already exist";
+
 }
 
 const ConstantsLib = new Constants();
