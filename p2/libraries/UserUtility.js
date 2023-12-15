@@ -1,13 +1,13 @@
 const express = require('express');
 const mongoose = require('mongoose');
-const Users = require('./../model/user/Users');
-const Roles = require('./../model/user/Roles');
-const UserRoles = require('./../model/user/UserRoles');
+const Users = require('../model/user/Users');
+const Roles = require('../model/user/Roles');
+const UserRoles = require('../model/user/UserRoles');
 const Module = require('./Module');
 
 require('dotenv').config();
 
-class User extends Module{
+class UserUtility extends Module{
     constructor() {
         super();
     }
@@ -17,6 +17,7 @@ class User extends Module{
 
         let role = Roles.ROLE_GENERAL;  
         
+        //Check if user exist
         User = Users.checkUserExistByMultiple(user_name, email, mobile);
         if(User) {
             return this.error_response(this.Constants.USER_EXIST, this.Constants.FORBIDDEN_ERROR);
@@ -50,7 +51,7 @@ class User extends Module{
         }
         
         //TODO create login data in Core/Auth and send it to response
-        return this.success_response(User);
+        return this.success_response("User registered successfully");
     }
 
 
@@ -61,7 +62,7 @@ class User extends Module{
 
     loginUser = async (username, password) => {
         
-        let user = this.checkUserExist(username);
+        let user = await this.checkUserExist(username);
         if (!user) {
             //TODO add to db about user attempt from ip and make an alert
             return res.status(401).json({ message: 'Invalid credentials' });
@@ -72,20 +73,25 @@ class User extends Module{
             return res.status(401).json({ message: 'Invalid credentials' });
         }
 
+        if(!user || await this.Illuminate.comparePassword(password, user.password) == false) {
+            return res.status(401).json({ message: 'Invalid credentials' });
+        }
+
         // Create a JWT token
-        let secretKey = process.env.SECRET_KEY;
-        let tokenDuration = (process.env.TOKEN_DURATION) * 60;
-        const token = jwt.sign({ userId: user._id }, secretKey, {
+        let secretKey = process.env.ACCESS_TOKEN_SECRET_KEY;
+        let tokenDuration = (process.env.ACCESS_TOKEN_DURATION) * 60;
+        const accessToken = jwt.sign({ 
+            userId: user[Users.ID],
+            email: user[Users.EMAIL], 
+            username: user[Users.USER_NAME], 
+        }, secretKey, {
             expiresIn: '1h',    //TODO update token duration from ENV
         });
 
-        res.json({ token });
+        res.json({ accessToken });
     }
 
     
 }
 
-// const UserLib = new User();
-
-
-module.exports = new User();
+module.exports = new UserUtility();

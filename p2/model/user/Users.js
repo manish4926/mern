@@ -60,29 +60,40 @@ class Users {
         [this.USER_NAME] : {
             type: String,
             required: [true, "User Name is Mandatory"],
+            unique : [true, "Username is Already Taken"]
         },
         [this.EMAIL] : {
             type: String,
             maxlength: [40, "Email can not exceed 40 limit"],
             required: [true, "Email is Mandatory"],
+            unique : [true, "Email Address is Already Taken"]
         },
         [this.MOBILE] : {
             type: Number,
             maxlength: [10, "Mobile No. can not exceed 10 digits"],
             minlength: [10, "Mobile No. can not less than 10 digits"],
             required: [true, "Mobile No. Mandatory"],
+            unique : [true, "Mobile No. is Already Taken"]
+        },
+        [this.PASSWORD] : {
+            type: String,
+            required: [true, "Password is Mandatory"]
+        },
+        [this.ROLE] : {
+            type: String,
+            required: [true, "Role is Mandatory"]
+        },
+        [this.MOBILE] : {
+            type: Number,
+            maxlength: [10, "Mobile No. can not exceed 10 digits"],
+            minlength: [10, "Mobile No. can not less than 10 digits"],
+            required: [true, "Mobile No. Mandatory"],
+            unique : [true, "Mobile No. is Already Taken"]
         },
         [this.STATUS]: {
             type: Number,
             default: 0
-        },
-
-        // [this.CREATED_AT]: {
-        //     type: Da
-        // },
-        // [this.UPDATED_AT]: {
-        //     type: DateTime
-        // }
+        }
     }, {
         timestamps: true
     })

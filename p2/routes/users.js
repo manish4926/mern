@@ -8,7 +8,7 @@ router.route('/register').post(UserController.createNewUser);
 
 router.route('/login').post(UserController.loginUser);
 
-router.route('/get-data').post(UserController.getUser);
+router.route('/get-data').get(UserController.getUser);
 
 router.route('/forgot-password').post(UserController.forgotPassword);
 

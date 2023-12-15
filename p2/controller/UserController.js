@@ -1,6 +1,6 @@
 
 const express  = require('express');
-const UserUtility = require('./../libraries/User');
+const UserUtility = require('./../libraries/UserUtility');
 const asyncHandler = require('express-async-handler');
 const Controller = require('./Controller');
 
@@ -26,10 +26,8 @@ class UserController extends Controller {
             throw new Error(this.Validator.message);
 		}
 
-        //Check if user exist
-        //register user
         
-
+        //register user
         let response = await UserUtility.createGeneralUser(req.body.first_name, req.body.last_name, req.body.user_name, req.body.email, req.body.mobile, req.body.password);
     
         return res.status(response.status).json(response.data);
