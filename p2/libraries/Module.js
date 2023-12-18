@@ -13,7 +13,7 @@ class Module {
     error_response = (errorVal, errorCode = 500) =>  {
         let res = {
             status : errorCode,
-            data : {msg : errorVal}
+            data : {message : errorVal}
         };
         return this.return_response(res);
     }

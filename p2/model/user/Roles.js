@@ -1,7 +1,8 @@
 const mongoose = require('mongoose');
 const SchemaValidator = require('../../core/SchemaValidator');
+const Model = require('../../core/Model');
 
-class Roles {
+class Roles extends Model {
     TABLE = "roles";
 
     //object variables
@@ -17,7 +18,10 @@ class Roles {
     
     constructor() {
         //Create Schema
-        this.Model = mongoose.model(this.TABLE, this.Schema);
+        super();
+        if(!this.Model) {
+            this.Model = mongoose.model(this.TABLE, this.Schema);
+        }
     }
 
     Schema = new mongoose.Schema({
@@ -30,19 +34,17 @@ class Roles {
         [this.DESCRIPTION] : {
             type: String,
             trim:  true
-        },
-        [this.CREATED_AT]: {
-            type: Date
-        },
-        [this.UPDATED_AT]: {
-            type: Date
         }
+    }, {
+        timestamps:  true
     })
 
     //TODO complete this
 
     getRoleByName(name) {
-        return this.Model.findOne((role) => role.name === name);
+        console.log('test');
+        //return this.Model.findOne((role) => role.name === name);
+        return this.Model.findOne({ [this.NAME] : name});
     }
     
     getRoles() {

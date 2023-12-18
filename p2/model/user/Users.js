@@ -1,22 +1,23 @@
 const mongoose = require('mongoose');
+const Model = require('../../core/Model');
 
-class Users {
+class Users extends Model {
 
     TABLE = "users";
 
     //create object variable
-    ID  = "_id";
-    NAME = "name";
-    FIRST_NAME = "first_name";
-    LAST_NAME = "last_name";
-    USER_NAME = "user_name";
-    EMAIL = "email";
-    MOBILE = "mobile";
-    PASSWORD = "password";
-    STATUS = "status";
-    ROLE = "role";
-    CREATED_AT = "created_at";
-    UPDATED_AT = "updated_at";
+    ID              = "_id";
+    NAME            = "name";
+    FIRST_NAME      = "first_name";
+    LAST_NAME       = "last_name";
+    USER_NAME       = "user_name";
+    EMAIL           = "email";
+    MOBILE          = "mobile";
+    PASSWORD        = "password";
+    STATUS          = "status";
+    ROLE            = "role";
+    CREATED_AT      = "created_at";
+    UPDATED_AT      = "updated_at";
 
 
     //do not create access token and remember token
@@ -36,10 +37,18 @@ class Users {
     LABEL_STATUS_TEMPORARY_BLOCKED = "TEMPORARY_BLOCKED";
     LABEL_STATUS_PERMANENT_BLOCKED = "PERMANENT_BLOCKED";
 
+    STATUS_MAPPING = {
+        [this.STATUS_INACTIVE] : this.LABEL_STATUS_INACTIVE,
+        [this.STATUS_ACTIVE] : this.LABEL_STATUS_ACTIVE,
+        [this.STATUS_TEMPORARY_BLOCKED] : this.LABEL_STATUS_TEMPORARY_BLOCKED,
+        [this.STATUS_PERMANENT_BLOCKED] : this.LABEL_STATUS_PERMANENT_BLOCKED
+    }
+
     EMAIL_LIMIT = 2;
     
 
     constructor() {
+        super();
         if(!this.Model) {
             this.Model = mongoose.model(this.TABLE, this.Schema);
         }
@@ -125,26 +134,27 @@ class Users {
 
     }
 
-    checkUserExistByMultiple = async (username = null, mobile = null, email = null) => {
-        let obj = {};
-        if(username) {
-            obj[this.USER_NAME] = username;
+    checkUserExistByMultiple = async (username = null, email = null, mobile = null, uid = null) => {
+        let user;
+        let orConditions = [];
+
+        if (username) {
+            orConditions.push({ [this.USER_NAME]: username });
         }
-        if(email) {
-            obj[this.EMAIL] = email;
+        if (email) {
+            orConditions.push({ [this.EMAIL]: email });
         }
-        if(mobile) {
-            obj[this.MOBILE] = mobile;
+        if (mobile) {
+            orConditions.push({ [this.MOBILE]: mobile });
         }
 
-        // const user = await this.Model.findOne({
-        //     $or:  [
-        //         obj
-        //     ]});
-        const user = await this.Model.findOne({_id: 1234});
+        user = await this.Model.findOne({
+            $or: orConditions
+        });
+        // user = await this.Model.findOne({_id: 1234});
         //let contacts = await Contacts.ContactsModel.findOne({[Contacts.ID] : ContactId});
             
-return "test";
+
         if (!user) {
             return null;
         }
@@ -164,6 +174,7 @@ return "test";
     checkUserByUserName = async (username) => {
         return true;
     }
+    
 }
 
 module.exports = new Users();

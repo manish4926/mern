@@ -17,19 +17,17 @@ class UserUtility extends Module{
 
         let role = Roles.ROLE_GENERAL;  
         let User;
-        
-        //Check if user exist
-        const userx = await Users.Model.findOne({_id: 1234});
-        return this.success_response("User registered successfully");
-        User = Users.checkUserExistByMultiple(user_name, email, mobile);
+        //Check if user exist with same email, username or mobile no.
+        //let user = await Users.Model.findOne({[Users.ID] : '656a1c313d96f87d631788b8'});
+       
+        User = await Users.checkUserExistByMultiple(user_name, email, mobile);
         if(User) {
             return this.error_response(this.Constants.USER_EXIST, this.Constants.FORBIDDEN_ERROR);
         }
-
         let data =  {
             [Users.FIRST_NAME] : first_name,
             [Users.LAST_NAME] : last_name,
-            [Users.NAME] : first_name+ " " + last_name,
+            [Users.NAME] : first_name + " " + last_name,
             [Users.USER_NAME] : user_name,
             [Users.EMAIL] : email,
             [Users.MOBILE] : mobile,
@@ -38,15 +36,13 @@ class UserUtility extends Module{
             //TOdo Create Authorization Token & Reminder Token (used for cookies)
             //[Users.CREATED_AT]: this.currentDateTime1
         };
-
         //generate password
-        data[Users.PASSWORD] = this.Illuminate.generatePassword(password);
-
+        data[Users.PASSWORD] = await this.Illuminate.generatePassword(password);
         User = await Users.Model.create(data);
 
         if(User) {
             //TODO Insert data in user roles
-            let role = Roles.getRoleByName(Roles.ROLE_GENERAL);
+            //let role = await Roles.getRoleByName(Roles.ROLE_GENERAL);
             let UserRole = await UserRoles.Model.create({
                 [UserRoles.USER_ID] : User[Users.ID],
                 [UserRoles.ROLE_ID] : role.id,
