@@ -101,7 +101,7 @@ class Validator{
                 let filter = requirementArr[filterIndx];
                 responseBody[element] = responseBody[element] ? responseBody[element] : null;
                 if(filter.includes(":")) {
-                    console.log("colon found");
+                    //console.log("colon found");
                 }
                 else {
                     switch(filter) {
@@ -114,7 +114,7 @@ class Validator{
                             break;
                         default: 
                             //TODO add to log
-                            console.log("Validator not found");
+                            //console.log("Validator not found");
                     }
                 }
                 

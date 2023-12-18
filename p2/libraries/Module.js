@@ -27,7 +27,7 @@ class Module {
     }
 
     return_response = (res) => {
-        console.log(res);
+        //console.log(res);
         return res;
     }
 

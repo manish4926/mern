@@ -16,8 +16,11 @@ class UserUtility extends Module{
     createGeneralUser = async (first_name, last_name, user_name, email, mobile, password) => {
 
         let role = Roles.ROLE_GENERAL;  
+        let User;
         
         //Check if user exist
+        const userx = await Users.Model.findOne({_id: 1234});
+        return this.success_response("User registered successfully");
         User = Users.checkUserExistByMultiple(user_name, email, mobile);
         if(User) {
             return this.error_response(this.Constants.USER_EXIST, this.Constants.FORBIDDEN_ERROR);
@@ -39,12 +42,12 @@ class UserUtility extends Module{
         //generate password
         data[Users.PASSWORD] = this.Illuminate.generatePassword(password);
 
-        const User = await Users.Model.create(data);
+        User = await Users.Model.create(data);
 
         if(User) {
             //TODO Insert data in user roles
             let role = Roles.getRoleByName(Roles.ROLE_GENERAL);
-            const UserRole = await UserRoles.Model.create({
+            let UserRole = await UserRoles.Model.create({
                 [UserRoles.USER_ID] : User[Users.ID],
                 [UserRoles.ROLE_ID] : role.id,
             });

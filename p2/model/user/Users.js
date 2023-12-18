@@ -40,7 +40,10 @@ class Users {
     
 
     constructor() {
-        this.Model = mongoose.model(this.TABLE, this.Schema);
+        if(!this.Model) {
+            this.Model = mongoose.model(this.TABLE, this.Schema);
+        }
+        
     }
 
     //create schema
@@ -125,19 +128,23 @@ class Users {
     checkUserExistByMultiple = async (username = null, mobile = null, email = null) => {
         let obj = {};
         if(username) {
-            obj[Users.USER_NAME] = username;
+            obj[this.USER_NAME] = username;
         }
         if(email) {
-            obj[Users.EMAIL] = email;
+            obj[this.EMAIL] = email;
         }
-        if(phone) {
-            obj[Users.MOBILE] = mobile;
+        if(mobile) {
+            obj[this.MOBILE] = mobile;
         }
-        const user = await Users.Model.findOne({
-            $or:  [
-                obj
-            ]});
 
+        // const user = await this.Model.findOne({
+        //     $or:  [
+        //         obj
+        //     ]});
+        const user = await this.Model.findOne({_id: 1234});
+        //let contacts = await Contacts.ContactsModel.findOne({[Contacts.ID] : ContactId});
+            
+return "test";
         if (!user) {
             return null;
         }
@@ -146,7 +153,7 @@ class Users {
     }
 
     checkUserByMobile = async (mobile) => {
-        const user = await Users.Model.find({
+        const user = await this.Model.find({
             $or: [
                 'mobile'
             ]}

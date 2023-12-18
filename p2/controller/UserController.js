@@ -12,13 +12,13 @@ class UserController extends Controller {
     
     createNewUser = asyncHandler(async (req, res) => {
         //Check for validations
-        let validator = {
-            'first_name'    : 'string|maxlength:40',
-            'last_name'     : 'string|maxlength:40',
-            'user_name'     : 'string|maxlength:40',
-            'email'         : 'email|maxlength:40',
-            'mobile'        : 'mobile',
-            'password'      : 'string|maxlength:40',
+        let validation = {
+            'first_name'    : 'required|string|maxlength:40',
+            'last_name'     : 'required|string|maxlength:40',
+            'user_name'     : 'required|string|maxlength:40',
+            'email'         : 'required|email|maxlength:40',
+            'mobile'        : 'required|mobile',
+            'password'      : 'required|string|maxlength:40',
         }
         this.Validator.make(req, res, validation);
         if (this.Validator.fail()) {
@@ -29,8 +29,7 @@ class UserController extends Controller {
         
         //register user
         let response = await UserUtility.createGeneralUser(req.body.first_name, req.body.last_name, req.body.user_name, req.body.email, req.body.mobile, req.body.password);
-    
-        return res.status(response.status).json(response.data);
+        return res.status(response.status).json(response);
     })
 
     loginUser = asyncHandler(async(req, res) => {
