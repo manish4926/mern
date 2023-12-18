@@ -17,7 +17,9 @@ class Contacts extends Model {
 
     constructor() {
         super();
-        this.Model = mongoose.model(this.TABLE, this.ContactsSchema);
+        if(!this.Model) {
+            this.Model = mongoose.model(this.TABLE, this.ContactsSchema);
+        }
     }
 
     ContactsSchema = new mongoose.Schema({
@@ -50,6 +52,8 @@ class Contacts extends Model {
             trim        : true,
             maxlength   : [100, "Website does not exceed 100 characters"]
         }
+    }, {
+        timestamps: true
     });
     
 }

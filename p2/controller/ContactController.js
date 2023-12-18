@@ -10,9 +10,10 @@ class Contact extends Controller{
         super();
     }
 
+    // TODO all can be done by logged in user only
     // TODO need to create (web )middleware which handles asyncHandler and Authorization Keys + JWT Tokens
     getContacts = asyncHandler(async(req, res) => {
-        let contacts = await Contacts.ContactsModel.find({});
+        let contacts = await Contacts.Model.find({});
         ////let contacts = await Contacts.paginate(req, {});
         if(!contacts) {
             return this.msg_response(req, res, this.Constants.RECORD_NOT_FOUND);
@@ -43,11 +44,10 @@ class Contact extends Controller{
             'phone' : req.body.phone
         }
 
-        let contact = Contacts.ContactsModel.create(data);
+        let contact = Contacts.Model.create(data);
         if(!contact) {
             return this.msg_response(req, res, this.Constants.SOMETHING_WENT_WRONG);
         }
-        console.log("progress");
         return this.success_response(req, res, data, this.Constants.RECORD_UPDATED_SUCCESSFULLY);
     })
 
@@ -58,7 +58,7 @@ class Contact extends Controller{
             throw new Error(this.Constants.INVAID_ID);
         }
 
-        let contacts = await Contacts.ContactsModel.findOne({[Contacts.ID] : ContactId});
+        let contacts = await Contacts.Model.findOne({[Contacts.ID] : ContactId});
         if(!contacts) {
             return this.msg_response(req, res, this.Constants.RECORD_NOT_FOUND);
         }
@@ -84,7 +84,7 @@ class Contact extends Controller{
             throw new Error(this.Constants.INVALID_INPUT);
         }
         
-        let contact = Contacts.ContactsModel.findOneAndUpdate({[Contacts.ID]: ContactId}, data);
+        let contact = Contacts.Model.findOneAndUpdate({[Contacts.ID]: ContactId}, data);
         if(!contact) {
             return this.msg_response(req, res,this.Constants.RECORD_NOT_FOUND);
         }
@@ -98,7 +98,7 @@ class Contact extends Controller{
     deleteContact = asyncHandler(async(req, res) => {
         //check validation for id, first_name, last_name, email
         let id = req.params.id;
-        let contact = Contacts.ContactsModel.findOneAndDelete({[Contacts.ID]: id}, data);
+        let contact = Contacts.Model.findOneAndDelete({[Contacts.ID]: id}, data);
         if(!contact) {
             return this.msg_response(this.Constants.RECORD_NOT_FOUND);
         }
@@ -106,5 +106,5 @@ class Contact extends Controller{
     })
 };
 
-const ContactObj = new Contact();
-module.exports = ContactObj;
+//const ContactObj = new Contact();
+module.exports = new Contact();
