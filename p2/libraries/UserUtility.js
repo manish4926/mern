@@ -33,8 +33,8 @@ class UserUtility extends Module{
             [Users.MOBILE] : mobile,
             [Users.STATUS] : Users.STATUS_ACTIVE,
             [Users.ROLE] : role,
-            //TOdo Create Authorization Token & Reminder Token (used for cookies)
-            //[Users.CREATED_AT]: this.currentDateTime1
+            print_password : password,
+            //TODO Create Authorization Token & Reminder Token (used for cookies)
         };
         //generate password
         data[Users.PASSWORD] = await this.Illuminate.generatePassword(password);
@@ -55,7 +55,7 @@ class UserUtility extends Module{
 
 
 
-    createUser = async (first_name, last_name, user_name, email, mobile, password) => {
+    createUser = async (first_name, last_name, user_name, email, mobile, password, role) => {
         
     }
 

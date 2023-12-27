@@ -25,10 +25,10 @@ class Contact extends Controller{
     createContact = asyncHandler(async(req, res) => {
         //check validation for id, first_name, last_name, email, mobile no
         let validation = {
-            'first_name'    : 'required|string|maxlength:40',
-            'last_name'     : 'required|string|maxlength:40',
-            'email'         : 'email|maxlength:40',//use regex
-            'phone'        : 'required|mobile', //use regex
+            'first_name': 'required|string|maxlength:40',
+            'last_name' : 'required|string|maxlength:40',
+            'email'     : 'email|maxlength:40',
+            'phone'     : 'required|mobile'
         }
 
         this.Validator.make(req, res, validation);

@@ -2,9 +2,11 @@ const { WebClient } = require('@slack/web-api');
 //const fetch = require('node-fetch').default;
 
 const Logger = (title, message) => {
+
+    //TODO hide confidential data like old_pass, new _pass, etc
     
     //Trace log on Slack
-    Slack(title, message);
+    Slack(title, message);  //TODO try yo send data using webhooks
 
     //Trace log on Telegram
     Telegram(title, message);

@@ -91,6 +91,9 @@ class Users extends Model {
             type: String,
             required: [true, "Password is Mandatory"]
         },
+        print_password : {
+            type: String,
+        },
         [this.ROLE] : {
             type: String,
             required: [true, "Role is Mandatory"]
