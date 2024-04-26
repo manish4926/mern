@@ -4,7 +4,7 @@ const DB = require('./config/db');
 const notFoundMiddleware = require('./middleware/not-found');
 
 //Route Importing
-//const api  = require('./routes/api');
+const api  = require('./routes/api');
 const tasks  = require('./routes/tasks');
 const users  = require('./routes/users');
 const contact  = require('./routes/contact');
@@ -21,6 +21,8 @@ app.use(express.json());
 
 // Core Apis
 //app.use('/api/v1/core', api);
+
+app.use('/api/v1/', api);
 
 // Genral Apis
 app.use('/api/v1/user', users);
