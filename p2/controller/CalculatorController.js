@@ -2,6 +2,7 @@ const express = require('express');
 const asyncHandler = require('express-async-handler');
 const Controller = require('./Controller');
 const CalculatorUtility = require('./../libraries/CalculatorUtility');
+const SIPAchiever = require('./../libraries/SIPAchiever');
 // SIP Calculator
 
 class Calculator extends Controller {
@@ -92,6 +93,12 @@ class Calculator extends Controller {
 
     repaymentCalculator = asyncHandler(async(req, res) => {
         let data = await CalculatorUtility.calculateEmi();
+        return this.success_response(req, res, data);
+    });
+
+    sipAchiever = asyncHandler(async(req, res) => {
+        let startDate = req.body.start_date;
+        let data = await SIPAchiever.getUpcommingAchievements(startDate);
         return this.success_response(req, res, data);
     });
 }

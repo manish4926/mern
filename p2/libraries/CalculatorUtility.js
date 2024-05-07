@@ -15,6 +15,10 @@ class CalculatorUtility {
   CurrentPrincipal = 0;
   CurrentPrincipalOS = 0;
   CurrentExcessAmount = 0;
+  CurrentRecordType = null;
+
+  RECORD_TYPE_INSTALLMENT = "INSTALLMENT";
+  RECORD_TYPE_PREPAYMENT = "PREPAYMENT";
 
   Header = [
     {
@@ -53,12 +57,9 @@ class CalculatorUtility {
 
   constructor() {
     this.PendingLoanAmount = this.TotalLoanAmount;
-    this.updateROI(new Date(this.StartDate));
-    this.CurrentEmiDate = new Date(this.StartDate);
-    this.getInstallmentAmount();
-    this.CurrentInterest = this.getInterestAmount();
-    this.CurrentPrincipal = this.getPrincipalAmount(this.CurrentInterest);
     this.CurrentPrincipalOS = this.TotalLoanAmount;
+    this.LoanPercentage = this.calculateROI(new Date(this.StartDate));
+    this.CurrentEmiDate = new Date(this.StartDate);
   }
 
   calculateInstallmentAmount = (principal, rate, durationInMonth) => {
@@ -72,47 +73,53 @@ class CalculatorUtility {
 
   getInstallmentAmount = () => {
     if (this.EmiInstallmentUpdatedDate === null) {
-      this.InstallmentAmount = this.calculateInstallmentAmount(
+      return this.calculateInstallmentAmount(
         this.TotalLoanAmount,
         this.LoanPercentage,
         this.TotalDuration
       );
     }
+    return this.InstallmentAmount;
   };
 
   getPrincipalAmount = (interest) => {
-    return this.InstallmentAmount - interest;
+    let principalAmount = this.InstallmentAmount - interest;
+    this.PendingLoanAmount = this.PendingLoanAmount - principalAmount;
+    return principalAmount;
   };
 
   getInterestAmount = () => {
-    return (this.PendingLoanAmount * this.LoanPercentage) / 100 / 12;
+    let interestAmount = ((this.PendingLoanAmount * this.LoanPercentage) / 100 / 12).toFixed(); 
+    this.TotalInterestPaid = parseInt(this.TotalInterestPaid) + parseInt(interestAmount);
+    return interestAmount;
   };
-
-  // getStandardDate = (date, format = "yyyy-mm-dd") => {
-  //   let newDate = new Date(this.StartDate).toDateString();
-  //   let year = date.getFullYear();
-  //   let month = String(date.getMonth() + 1).padStart(2, "0");
-  //   let day = String(date.getDate()).padStart(2, "0");
-  //   let dateString = `${year}-${month}-${day}`;
-  //   return dateString;
-  // };
 
   addMonthToEmi = (date) => {
     return new Date(date.setMonth(date.getMonth() + 1));
   };
 
-  updateROI = (date) => {
-    let newDate = new Date(this.RoiArr[0].date);
-    if (newDate >= date) {
-      this.LoanPercentage = this.RoiArr[0].rate;
-      this.RoiArr.splice(0, 1);
-    }
+  calculateROI = (date) => {
+    if(this.RoiArr.length > 0) {
+      let newDate = new Date(this.RoiArr[0].date);
+      if (date >= newDate) {
+        let newRate = this.RoiArr[0].rate;
+        this.RoiArr.splice(0, 1);
+        return newRate;
+      }
+    }  
+    return this.LoanPercentage;
   };
 
   preCalculateExec = () => {
     this.SNO++;
     this.CurrentMonth++;
-    this.TotalInterestPaid = this.TotalInterestPaid + this.CurrentInterest;
+    this.LoanPercentage = this.calculateROI(new Date(this.CurrentEmiDate));
+    this.InstallmentAmount = this.getInstallmentAmount();
+    this.CurrentInterest = this.getInterestAmount();
+    this.CurrentPrincipal = this.getPrincipalAmount(this.CurrentInterest);
+    this.CurrentRecordType = this.RECORD_TYPE_INSTALLMENT;
+
+    
     this.CurrentPrincipalOS = this.CurrentPrincipalOS - this.CurrentPrincipal;
   };
 
@@ -121,11 +128,8 @@ class CalculatorUtility {
   };
 
   calculateEmi = async () => {
-    let data = [];
-    let recordType = "Installment";
-
-    //let emiDate = this.getStandardDate(this.StartDate);
-    while (this.CurrentMonth <= this.TotalDuration) {
+    let data = []; 
+    while (this.CurrentMonth <= this.TotalDuration -1 ) {
       this.preCalculateExec();
 
       let singeEntry = {
@@ -139,16 +143,11 @@ class CalculatorUtility {
         excess_amount: this.CurrentExcessAmount,
         int_paid: this.TotalInterestPaid,
         pm_os: this.CurrentPrincipalOS,
-        record_type: recordType,
+        record_type: this.CurrentRecordType,
       };
 
-      this.postCalculateExec();
-
-      
+      this.postCalculateExec();      
       data.push(singeEntry);
-
-      //this.updateROI();
-      //this.TotalLoanAmount = this.TotalLoanAmount - 100000;
     }
     //let response = this.Header.concat(data);
     return data;
