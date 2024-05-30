@@ -22,7 +22,7 @@ class SIPAchiever {
         let stepuppercent = req.body.stepup_percent;
         let startdate = req.body.start_date;
         let currentWealth = req.body.currentWealth;
-        let data = [];
+        let upcomming = [];
         
 
         let monthlyInvestmentArr = [500,1000, 2000,5000,10000,15000];
@@ -41,13 +41,14 @@ class SIPAchiever {
                     stepuppercent = stepuppercentArr[k];
                     //data.push([monthlyInvestmentArr[i], newStartDate.toDateString(), stepuppercentArr[k]]);        
                     let response = this.calculateSIP(currentWealth, newStartDate, monthlyInvestment, interestRate, years, stepupamount, stepup_in_month, stepuppercent);
-                    data.push(response);
+                    upcomming.push(response['upcomming']);
                 }
             }           
-            //Testing
         }
 
-        return data;
+        let firstFiveData = upcomming.slice(0,5);
+
+        return firstFiveData;
     });
 
     calculateSIP = (currentWealth, startdate, monthlyInvestment, interestRate, years, stepupamount = 0, stepup_in_month  = 12, stepuppercent = 0 ) => {
@@ -83,6 +84,7 @@ class SIPAchiever {
             totalAmount += interest;
             //console.log(`Month ${i}: Total amount = ${totalAmount.toFixed(2)}`);
             startdate.setMonth(startdate.getMonth() + 1);
+            let achievement = [];
             
             if(totalAmount >= currentWealth && (i%12 == 0)) {
                 let diffBalance = (totalAmount - currentWealth+1).toFixed(0);
@@ -91,7 +93,10 @@ class SIPAchiever {
                 if(stepuppercent > 0) {
                     message = message + " with stepup percentage of "+ stepuppercent;
                 }
-                return {
+
+                
+
+                achievement['upcomming'] =  {
                     'month': i,
                     'start_on' : firstDate.toDateString(),
                     'current_date': startdate.toDateString(),
@@ -104,6 +109,7 @@ class SIPAchiever {
                     'stepup_percentage': stepuppercent,
                     'message' : message
                 };
+                return achievement;
             }
             
         }
