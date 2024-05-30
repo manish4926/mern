@@ -38,7 +38,7 @@ class Calculator extends Controller {
         return this.success_response(req, res, data);
     })
 
-    calculateStepUpSIP = asyncHandler(async(req, res) => {
+    calculateStepUpSIP = asyncHandler(async (req, res) => {
         let monthlyInvestment = req.body.amount;
         let interestRate = req.body.roi; //in percent
         let years = req.body.tenure;
@@ -47,7 +47,7 @@ class Calculator extends Controller {
         let stepuppercent = req.body.stepup_percent;
         let startdate = req.body.start_date;
         startdate = new Date(startdate);
-        startdate.setMonth(startdate.getMonth() );
+        startdate.setMonth(startdate.getMonth());
 
         let totalMonths = years * 12;
         let monthlyRate = interestRate / 12 / 100;
@@ -56,11 +56,11 @@ class Calculator extends Controller {
         let totalAmount = 0;
         let totalInterest = 0;
         let data = [];
-        for(let i = 1; i <= totalMonths; i++) {
+        for (let i = 1; i <= totalMonths; i++) {
             //Step Up
-            if(i%stepup_in_month ===0) {
+            if (i % stepup_in_month === 0) {
                 //console.log('amount updated');
-                if(stepuppercent) {
+                if (stepuppercent) {
                     monthlyInvestment = monthlyInvestment + (Math.round((monthlyInvestment * stepuppercent) / 100));
                 } else {
                     monthlyInvestment = monthlyInvestment + stepupamount;
@@ -76,20 +76,25 @@ class Calculator extends Controller {
             //console.log(`Month ${i}: Total amount = ${totalAmount.toFixed(2)}`);
             startdate.setMonth(startdate.getMonth() + 1);
             data.push({
-                'month' : i,
-                'current_date' : startdate.toDateString(),
-                'monthly_investment' : monthlyInvestment,
-                'invested' : finalInvestedAmount,
-                'total' : totalAmount.toFixed(2),
-                'roi' : interestRate,
-                'interest' : interest,
-                'total_interest' : totalInterest,
-                
+                'month': i,
+                'current_date': startdate.toDateString(),
+                'monthly_investment': monthlyInvestment,
+                'invested': finalInvestedAmount,
+                'total': totalAmount.toFixed(2),
+                'roi': interestRate,
+                'interest': interest,
+                'total_interest': totalInterest,
             });
         }
         return this.success_response(req, res, data);
-        
-    })
+
+    });
+    get calculateStepUpSIP() {
+        return this._calculateStepUpSIP;
+    }
+    set calculateStepUpSIP(value) {
+        this._calculateStepUpSIP = value;
+    }
 
     repaymentCalculator = asyncHandler(async(req, res) => {
         let data = await CalculatorUtility.calculateEmi();
@@ -97,8 +102,7 @@ class Calculator extends Controller {
     });
 
     sipAchiever = asyncHandler(async(req, res) => {
-        let startDate = req.body.start_date;
-        let data = await SIPAchiever.getUpcommingAchievements(startDate);
+        let data = await SIPAchiever.getUpcommingAchievements(req, res);
         return this.success_response(req, res, data);
     });
 }
