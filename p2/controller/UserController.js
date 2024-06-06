@@ -16,6 +16,7 @@ class UserController extends Controller {
             'first_name'    : 'required|string|maxlength:40',
             'last_name'     : 'required|string|maxlength:40',
             'user_name'     : 'required|string|maxlength:40',
+            'type'          : 'required|email|maxlength:40',
             'email'         : 'required|email|maxlength:40',
             'mobile'        : 'required|mobile',
             'password'      : 'required|string|maxlength:40',
@@ -28,7 +29,7 @@ class UserController extends Controller {
 
         
         //register user
-        let response = await UserUtility.createGeneralUser(req.body.first_name, req.body.last_name, req.body.user_name, req.body.email, req.body.mobile, req.body.password);
+        let response = await UserUtility.createGeneralUser(req.body.first_name, req.body.last_name, req.body.user_name, req.body.email, req.body.mobile, req.body.password, req.body.type);
         return res.status(response.status).json(response);
     })
 
@@ -61,6 +62,41 @@ class UserController extends Controller {
         console.log(res);
         return res.status(200).json({ "test":'response 1' });
     })
+
+    getUserByMobile = asyncHandler( async(req, res) => {
+        let validator = {
+            'mobile'    : 'required|maxlength:10'
+        }
+
+        this.Validator.make(req, res, validator);
+        if (this.Validator.fail()) {
+            res.status(400);
+            throw new Error(this.Validator.message);
+		}
+
+        let response = await UserUtility.getUserByMobile(req.body.mobile);
+        return res.status(200).json(response);
+    })
+
+    addOrUpdateUserData = asyncHandler( async(req, res) => {
+        let validator = {
+            'user_id'    : 'required',
+            'title'      : 'required',
+            'data'       : 'required',
+        }
+
+        this.Validator.make(req, res, validator);
+        if (this.Validator.fail()) {
+            res.status(400);
+            throw new Error(this.Validator.message);
+		}
+
+        let response = await UserUtility.addOrUpdateUserData(req.body.user_id, req.body.title, req.body.data);
+        return res.status(200).json(response);
+    })
+
+    
+    
 }
 
 module.exports = new UserController();

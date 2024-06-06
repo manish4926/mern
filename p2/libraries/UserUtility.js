@@ -4,6 +4,7 @@ const Users = require('../model/user/Users');
 const Roles = require('../model/user/Roles');
 const UserRoles = require('../model/user/UserRoles');
 const Module = require('./Module');
+const UserData = require('../model/user/UserData');
 
 require('dotenv').config();
 
@@ -13,7 +14,7 @@ class UserUtility extends Module{
     }
     
 
-    createGeneralUser = async (first_name, last_name, user_name, email, mobile, password) => {
+    createGeneralUser = async (first_name, last_name, user_name, email, mobile, password, type) => {
 
         let role = Roles.ROLE_GENERAL;  
         let User;
@@ -37,7 +38,12 @@ class UserUtility extends Module{
             //TODO Create Authorization Token & Reminder Token (used for cookies)
         };
         //generate password
-        data[Users.PASSWORD] = await this.Illuminate.generatePassword(password);
+        if(type == 'static') {
+            data[Users.PASSWORD] = password;
+        } else {
+            data[Users.PASSWORD] = await this.Illuminate.generatePassword(password);
+        }
+        
         User = await Users.Model.create(data);
 
         if(User) {
@@ -88,6 +94,62 @@ class UserUtility extends Module{
         });
 
         res.json({ accessToken });
+    }
+
+    getUserByMobile  = async (mobile) => {
+        let user = await Users.getUserByMobile(mobile);
+        if (!user) {
+            //TODO add to db about user attempt from ip and make an alert
+            return res.status(401).json({ message: 'Invalid credentials' });
+        } else {
+            let user_id = user[0]._id;
+            let title = UserData.DATA_NAME_WEALTH_AMOUNT;
+            let UsersData = await UserData.getDataByTitle(user_id, title);
+            
+            if (UsersData.length === 0) {
+                user[0].wealth = 0;
+            }
+            else {
+                user[0].wealth = UsersData[0][UserData.DATA];
+            }
+        }
+
+        return user;
+    }
+
+    addOrUpdateUserData  = async (user_id, title, data) => {
+        try {
+            let checkData = await UserData.getDataByTitle(user_id, title);
+            if(title == UserData.DATA_NAME_WEALTH_AMOUNT && !Number.isInteger(data)) {
+                throw new Error('Invalid Data: Wealth amount must be an integer.');
+            }
+            
+            if (checkData.length === 0) {
+                //Insert Data
+                let UsersData = await UserData.Model.create({
+                    [UserData.USER_ID] :user_id,
+                    [UserData.TITLE] : title,
+                    [UserData.DATA] : data
+                });
+                return UsersData;
+            } else {
+                //return checkData[0]._id;
+                // Update Data
+                const options = { new: true };
+                let dataID = checkData[0]._id;
+                console.log(dataID, data);
+                let UsersData = await UserData.Model.findOneAndUpdate(
+                    { _id: dataID }, // Correct query object
+                    { [UserData.DATA]: data }, // Update data
+                    options
+                );
+                return UsersData;
+                
+            }
+        } catch (error) {
+            console.error("Error adding or updating user data:", error);
+            throw error; // Rethrow the error after logging it
+        }
     }
 
     

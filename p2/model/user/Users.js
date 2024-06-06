@@ -165,13 +165,32 @@ class Users extends Model {
 
     }
 
-    checkUserByMobile = async (mobile) => {
-        const user = await this.Model.find({
-            $or: [
-                'mobile'
-            ]}
-        );
-        return true;
+    getUserByMobile = async (mobile) => {
+        try {
+            const user = await this.Model.find({
+                $or: [
+                    { mobile: mobile }
+                ]
+            });
+            return user; // Return the user object instead of true
+        } catch (error) {
+            console.error("Error finding user by mobile:", error);
+            throw error; // Rethrow the error after logging it
+        }
+    }
+
+    getUserByID = async (userID) => {
+        try {
+            const user = await this.Model.find({
+                $or: [
+                    { _id: userID }
+                ]
+            });
+            return user; // Return the user object instead of true
+        } catch (error) {
+            console.error("Error finding user by mobile:", error);
+            throw error; // Rethrow the error after logging it
+        }
     }
 
     checkUserByUserName = async (username) => {
