@@ -1,6 +1,7 @@
 const { header } = require("express-validator");
 const asyncHandler = require('express-async-handler');
 const { end } = require("pdfkit");
+const UserData = require('../model/user/UserData');
 
 class SIPAchiever {
 
@@ -13,6 +14,22 @@ class SIPAchiever {
     }
 
     getUpcommingAchievements = asyncHandler(async (req, res) => {
+
+        let user_id = req.body.user_id;
+        let title = UserData.DATA_NAME_WEALTH_AMOUNT;
+        let UsersData = await UserData.getDataByTitle(user_id, title);
+        let currentWealth = 0;
+        if (UsersData.length === 0) {
+            currentWealth = req.body.currentWealth;
+            if(req.body.amount === 0) {
+                return [];
+            }
+        }
+        else {
+            currentWealth = UsersData[0][UserData.DATA];
+        }
+
+
         let callBackYears = req.body.callBackYear; //To Get data of last how many years
         let monthlyInvestment = req.body.amount;
         let interestRate = req.body.roi; //in percent
@@ -21,7 +38,6 @@ class SIPAchiever {
         let stepup_in_month = req.body.stepup_in_month;
         let stepuppercent = req.body.stepup_percent;
         let startdate = req.body.start_date;
-        let currentWealth = req.body.currentWealth;
         let upcomming = [];
         
 

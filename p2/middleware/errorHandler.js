@@ -16,6 +16,7 @@ const errorHandler = (err, req, res, next) => {
     const url = new URL(`${req.protocol}://${req.get('host')}${req.originalUrl}`);
 
     if(statusCode != 200 &&  statusCode != 201) {
+        console.log(req.body, req.query);
         switch(statusCode) {
             case Constants.VALIDATION_ERROR:
                 res.json ({
@@ -27,7 +28,7 @@ const errorHandler = (err, req, res, next) => {
             case Constants.NOT_FOUND_ERROR:
                 res.json ({
                     title: "Request Not Found in Error Handleer",
-                    message : err.message+' Invalid Url! Page you entered might not exist or deleted',
+                    message : err.message+' Invalid Url! Page you entered might not exist or deleted. Error Handler',
                     stackTrace: err.stack
                 });
                 break;

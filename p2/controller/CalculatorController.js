@@ -11,6 +11,7 @@ class Calculator extends Controller {
     }
 
     calculateSIP = asyncHandler(async(req, res) => {
+
         let monthlyInvestment = req.body.amount;
         let interestRate = req.body.roi; //in percent
         let years = req.body.tenure;

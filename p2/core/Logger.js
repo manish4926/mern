@@ -180,7 +180,7 @@ const Slack = (title, message) => {
     
     content.channel = conversationId;
 
-    console.log(content);
+    //console.log(content);
 
     (async () => {
 
