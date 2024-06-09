@@ -43,6 +43,7 @@ class SIPAchiever {
 
         let monthlyInvestmentArr = [500,1000, 2000,5000,10000,15000];
         let stepuppercentArr = [0, 5, 10, 15, 20];
+        //let stepuppercentArr = [0];
 
         for(let i = 0; i < monthlyInvestmentArr.length; i++) {
             //For Loop for CallBackYears
@@ -68,9 +69,11 @@ class SIPAchiever {
     });
 
     calculateSIP = (currentWealth, startdate, monthlyInvestment, interestRate, years, stepupamount = 0, stepup_in_month  = 12, stepuppercent = 0 ) => {
+        
         let firstDate = new Date(startdate);
         startdate = new Date(startdate);
         startdate.setMonth(startdate.getMonth());
+        let sipStandardAmount = monthlyInvestment;
         
 
         let totalMonths = years * 12;
@@ -123,6 +126,7 @@ class SIPAchiever {
                     'interest': interest.toFixed(2),
                     'total_interest': totalInterest.toFixed(2),
                     'stepup_percentage': stepuppercent,
+                    'sip_standard_amount' : sipStandardAmount,
                     'message' : message
                 };
                 return achievement;

@@ -60,7 +60,6 @@ class Calculator extends Controller {
         for (let i = 1; i <= totalMonths; i++) {
             //Step Up
             if (i % stepup_in_month === 0) {
-                //console.log('amount updated');
                 if (stepuppercent) {
                     monthlyInvestment = monthlyInvestment + (Math.round((monthlyInvestment * stepuppercent) / 100));
                 } else {
@@ -103,6 +102,22 @@ class Calculator extends Controller {
     });
 
     sipAchiever = asyncHandler(async(req, res) => {
+        
+        let validator = {
+            'roi'               : 'required|integer',
+            'tenure'            : 'required|integer',
+            'stepup_percent'    : 'required|integer',
+            'stepup_in_month'   : 'required|integer',
+            'start_date'        : 'required',
+            'currentWealth'     : 'required|integer',
+            'callBackYear'      : 'required|integer',
+        }
+
+        this.Validator.make(req, res, validator);
+        if (this.Validator.fail()) {
+            res.status(400);
+            throw new Error(this.Validator.message);
+		}
         let data = await SIPAchiever.getUpcommingAchievements(req, res);
         return this.success_response(req, res, data);
     });

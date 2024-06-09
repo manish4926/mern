@@ -15,11 +15,24 @@ const port = process.env.SERVER_PORT; ///from env;
 const app = express();
 
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
 // Initialize a single instance for the whole app
 
 
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 
+    next();
+  });
+  
+
+  app.use((req, res, next) => {
+    const combinedData = { ...req.body, ...req.query };
+    req.body = combinedData;
+    next();
+  });
 
 // Core Apis
 //app.use('/api/v1/core', api);
