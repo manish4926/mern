@@ -43,33 +43,47 @@ class SIPAchiever {
 
         let monthlyInvestmentArr = [500,1000, 2000,5000,10000,15000];
         let stepuppercentArr = [0, 5, 10, 15, 20];
-        //let stepuppercentArr = [0];
 
         for(let i = 0; i < monthlyInvestmentArr.length; i++) {
             //For Loop for CallBackYears
             
-            for(let j = 0; j < callBackYears; j++) {
+            for(let j = 0; j <= callBackYears; j++) {
                 let newStartDate = new Date(startdate);    
+                let callBackYear = j;
                 newStartDate.setFullYear(newStartDate.getFullYear() - j);
-
                 //For Loop for Step Up Api Data
                 for(let k = 0; k < stepuppercentArr.length; k++) {
                     monthlyInvestment = monthlyInvestmentArr[i];
                     stepuppercent = stepuppercentArr[k];
-                    //data.push([monthlyInvestmentArr[i], newStartDate.toDateString(), stepuppercentArr[k]]);        
-                    let response = this.calculateSIP(currentWealth, newStartDate, monthlyInvestment, interestRate, years, stepupamount, stepup_in_month, stepuppercent);
+                    let response = this.calculateSIP(currentWealth, newStartDate, monthlyInvestment, interestRate, callBackYear, stepupamount, stepup_in_month, stepuppercent);
                     upcomming.push(response['upcomming']);
                 }
             }           
         }
 
-        let firstFiveData = upcomming.slice(0,5);
+        // upcomming.sort((a, b) => {
+        //     return a['addable_amount'] - b['addable_amount'];
+        //   });
+
+        upcomming = upcomming.filter(item => item !== null && item !== undefined);
+
+        let firstFiveData = [];
+        if(upcomming.length > 5) {
+            firstFiveData = upcomming.slice(0,5);
+        } else {
+            firstFiveData = upcomming;
+        }
+        
 
         return firstFiveData;
     });
 
+    monthDiff = (dateFrom, dateTo) => {
+        return dateTo.getMonth() - dateFrom.getMonth() + 
+          (12 * (dateTo.getFullYear() - dateFrom.getFullYear()))
+    }
+
     calculateSIP = (currentWealth, startdate, monthlyInvestment, interestRate, years, stepupamount = 0, stepup_in_month  = 12, stepuppercent = 0 ) => {
-        
         let firstDate = new Date(startdate);
         startdate = new Date(startdate);
         startdate.setMonth(startdate.getMonth());
@@ -83,11 +97,9 @@ class SIPAchiever {
         let totalAmount = 0;
         let totalInterest = 0;
         let data = [];
-        
         for (let i = 1; i <= totalMonths; i++) {
             //Step Up
             if (i % stepup_in_month === 0) {
-                //console.log('amount updated');
                 if (stepuppercent) {
                     monthlyInvestment = monthlyInvestment + (Math.round((monthlyInvestment * stepuppercent) / 100));
                 } else {
@@ -101,19 +113,17 @@ class SIPAchiever {
             let interest = totalAmount * monthlyRate;
             totalInterest = totalInterest + interest;
             totalAmount += interest;
-            //console.log(`Month ${i}: Total amount = ${totalAmount.toFixed(2)}`);
             startdate.setMonth(startdate.getMonth() + 1);
             let achievement = [];
             
             if(totalAmount >= currentWealth && (i%12 == 0)) {
                 let diffBalance = (totalAmount - currentWealth+1).toFixed(0);
                 let yearAchieved = i/12;
+                let addableAmount = diffBalance;
                 let message = "Add "+ diffBalance + " amount to achieve " + yearAchieved + " years target Investement started on " + firstDate.toDateString();
                 if(stepuppercent > 0) {
                     message = message + " with stepup percentage of "+ stepuppercent;
                 }
-
-                
 
                 achievement['upcomming'] =  {
                     'month': i,
@@ -127,6 +137,7 @@ class SIPAchiever {
                     'total_interest': totalInterest.toFixed(2),
                     'stepup_percentage': stepuppercent,
                     'sip_standard_amount' : sipStandardAmount,
+                    'addable_amount' : addableAmount,
                     'message' : message
                 };
                 return achievement;
