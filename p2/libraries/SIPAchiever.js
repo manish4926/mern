@@ -55,7 +55,7 @@ class SIPAchiever {
                 for(let k = 0; k < stepuppercentArr.length; k++) {
                     monthlyInvestment = monthlyInvestmentArr[i];
                     stepuppercent = stepuppercentArr[k];
-                    let response = this.calculateSIP(currentWealth, newStartDate, monthlyInvestment, interestRate, callBackYear, stepupamount, stepup_in_month, stepuppercent);
+                    let response = this.calculateUpcommingSIPAchievement(currentWealth, newStartDate, monthlyInvestment, interestRate, callBackYear, stepupamount, stepup_in_month, stepuppercent);
                     upcomming.push(response['upcomming']);
                 }
             }           
@@ -83,7 +83,7 @@ class SIPAchiever {
           (12 * (dateTo.getFullYear() - dateFrom.getFullYear()))
     }
 
-    calculateSIP = (currentWealth, startdate, monthlyInvestment, interestRate, years, stepupamount = 0, stepup_in_month  = 12, stepuppercent = 0 ) => {
+    calculateUpcommingSIPAchievement = (currentWealth, startdate, monthlyInvestment, interestRate, years, stepupamount = 0, stepup_in_month  = 12, stepuppercent = 0 ) => {
         let firstDate = new Date(startdate);
         startdate = new Date(startdate);
         startdate.setMonth(startdate.getMonth());
@@ -146,6 +146,178 @@ class SIPAchiever {
         }
 
         return data;
+    };
+
+    getPreviousAchievements = asyncHandler(async (req, res) => {
+
+        let user_id = req.body.user_id;
+        let title = UserData.DATA_NAME_WEALTH_AMOUNT;
+        let UsersData = await UserData.getDataByTitle(user_id, title);
+        let currentWealth = 0;
+        if (UsersData.length === 0) {
+            currentWealth = req.body.currentWealth;
+            if(req.body.amount === 0) {
+                return [];
+            }
+        }
+        else {
+            currentWealth = UsersData[0][UserData.DATA];
+        }
+
+
+        let callBackYears = req.body.callBackYear; //To Get data of last how many years
+        let monthlyInvestment = req.body.amount;
+        let interestRate = req.body.roi; //in percent
+        let years = req.body.tenure;
+        let stepupamount = req.body.stepup_amount;
+        let stepup_in_month = req.body.stepup_in_month;
+        let stepuppercent = req.body.stepup_percent;
+        let startdate = req.body.start_date;
+        let finalData = {};
+        
+
+        let monthlyInvestmentArr = [500,1000, 2000,5000,10000,15000];
+        let stepuppercentArr = [0, 5, 10, 15, 20];
+
+        for(let i = 0; i < monthlyInvestmentArr.length; i++) {
+            //For Loop for CallBackYears
+            
+            let newStartDate = new Date(startdate);    
+            //let callBackYear = j;
+            newStartDate.setFullYear(newStartDate.getFullYear() - callBackYears);
+            //For Loop for Step Up Api Data
+            for(let k = 0; k < stepuppercentArr.length; k++) {
+                monthlyInvestment = monthlyInvestmentArr[i];
+                stepuppercent = stepuppercentArr[k];
+                if(!finalData[monthlyInvestment]) { finalData[monthlyInvestment] = {}; }
+                let response = this.calculatePreviousSIPAchievement(currentWealth, newStartDate, monthlyInvestment, interestRate, callBackYears, stepupamount, stepup_in_month, stepuppercent);
+                console.log(monthlyInvestment, stepuppercent);
+                finalData[monthlyInvestment][stepuppercent] = response;
+
+            }       
+        }
+        
+        return finalData;
+    });
+
+    calculatePreviousSIPAchievement = (currentWealth, startdate, monthlyInvestment, interestRate, years, stepupamount = 0, stepup_in_month  = 12, stepuppercent = 0 ) => {
+        let firstDate = new Date(startdate);
+        startdate = new Date(startdate);
+        startdate.setMonth(startdate.getMonth());
+        let sipStandardAmount = monthlyInvestment;
+        
+
+        let totalMonths = years * 12;
+        let monthlyRate = interestRate / 12 / 100;
+
+        let finalInvestedAmount = 0;
+        let totalAmount = 0;
+        let totalInterest = 0;
+        let data = [];
+        let achievement = {};
+        let prevoiusData = [];
+        let upcommingData = [];
+        let completedData = [];
+
+        for (let i = 1; i <= totalMonths+1; i++) {
+            //Step Up
+            if (i % stepup_in_month === 0) {
+                if (stepuppercent) {
+                    monthlyInvestment = monthlyInvestment + (Math.round((monthlyInvestment * stepuppercent) / 100));
+                } else {
+                    monthlyInvestment = monthlyInvestment + stepupamount;
+                }
+            }
+
+            //Normal
+            finalInvestedAmount += monthlyInvestment;
+            totalAmount += monthlyInvestment;
+            let interest = totalAmount * monthlyRate;
+            totalInterest = totalInterest + interest;
+            totalAmount += interest;
+            startdate.setMonth(startdate.getMonth() + 1);
+            let diffBalance = (totalAmount - currentWealth+1).toFixed(0);
+            let yearAchieved = i/12;
+            let addableAmount = diffBalance;
+            
+            if(totalAmount <= currentWealth && i%12 == 0 && i <= totalMonths) {
+            
+                let diffBalance = (totalAmount - currentWealth+1).toFixed(0);
+
+                let newData =   {
+                    'month': i,
+                    'start_on' : firstDate.toDateString(),
+                    'current_date': startdate.toDateString(),
+                    'monthly_investment': monthlyInvestment,
+                    'invested': finalInvestedAmount,
+                    'total': totalAmount.toFixed(2),
+                    'roi': interestRate,
+                    'interest': interest.toFixed(2),
+                    'total_interest': totalInterest.toFixed(2),
+                    'stepup_percentage': stepuppercent,
+                    'sip_standard_amount' : sipStandardAmount,
+                    'addable_amount' : addableAmount
+                };
+                prevoiusData.push(newData);
+
+            } else if(i <= totalMonths && i%12 == 0) {
+                
+                let message = "Add "+ diffBalance + " amount to achieve " + yearAchieved + " years target Investement started on " + firstDate.toDateString();
+                if(stepuppercent > 0) {
+                    message = message + " with stepup percentage of "+ stepuppercent;
+                }
+
+                let newData =   {
+                    'month': i,
+                    'start_on' : firstDate.toDateString(),
+                    'current_date': startdate.toDateString(),
+                    'monthly_investment': monthlyInvestment,
+                    'invested': finalInvestedAmount,
+                    'total': totalAmount.toFixed(2),
+                    'roi': interestRate,
+                    'interest': interest.toFixed(2),
+                    'total_interest': totalInterest.toFixed(2),
+                    'stepup_percentage': stepuppercent,
+                    'sip_standard_amount' : sipStandardAmount,
+                    'addable_amount' : addableAmount,
+                    'message' : message
+                };
+                upcommingData.push(newData);
+                break;
+            } else if(i > totalMonths) {
+                
+                let message = "Conratulations! You have achieved the target of amount "+ totalAmount.toFixed(2) + " for " + yearAchieved + " years with SIP amount "+ startdate.toDateString() +" started on " + firstDate.toDateString();
+                if(stepuppercent > 0) {
+                    message = message + " with stepup percentage of "+ stepuppercent;
+                }
+
+                totalAmount = totalAmount- monthlyInvestment - interest;
+                let newData =   {
+                    'month': i,
+                    'start_on' : firstDate.toDateString(),
+                    'current_date': startdate.toDateString(),
+                    'monthly_investment': monthlyInvestment,
+                    'invested': finalInvestedAmount,
+                    'total': totalAmount.toFixed(2),
+                    'roi': interestRate,
+                    'interest': interest.toFixed(2),
+                    'total_interest': totalInterest.toFixed(2),
+                    'stepup_percentage': stepuppercent,
+                    'sip_standard_amount' : sipStandardAmount,
+                    'addable_amount' : addableAmount,
+                    'message' : message
+                };
+                completedData.push(newData);
+                break;
+            }
+            
+        }
+
+        achievement['previous'] = prevoiusData;
+        achievement['upcomming'] = upcommingData;
+        achievement['completed'] = completedData;
+
+        return achievement;
     };
 }
 

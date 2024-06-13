@@ -121,6 +121,27 @@ class Calculator extends Controller {
         let data = await SIPAchiever.getUpcommingAchievements(req, res);
         return this.success_response(req, res, data);
     });
+
+    sipAchieverAchieved = asyncHandler(async(req, res) => {
+        
+        let validator = {
+            'roi'               : 'required|integer',
+            'tenure'            : 'required|integer',
+            'stepup_percent'    : 'required|integer',
+            'stepup_in_month'   : 'required|integer',
+            'start_date'        : 'required',
+            'currentWealth'     : 'required|integer',
+            'callBackYear'      : 'required|integer',
+        }
+
+        this.Validator.make(req, res, validator);
+        if (this.Validator.fail()) {
+            res.status(400);
+            throw new Error(this.Validator.message);
+		}
+        let data = await SIPAchiever.getPreviousAchievements(req, res);
+        return this.success_response(req, res, data);
+    });
 }
 
 module.exports = new Calculator();

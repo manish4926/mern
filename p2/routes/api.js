@@ -13,6 +13,7 @@ router.route('/calculator/sip').get(Calculator.calculateSIP);
 router.route('/calculator/stepupsip').get(Calculator.calculateStepUpSIP);
 
 router.route('/calculator/sip/achiever').get(Calculator.sipAchiever);
+router.route('/calculator/sip/achiever/achieved').get(Calculator.sipAchieverAchieved);
 
 router.route('/calculator/emi/repayemnt').get(Calculator.repaymentCalculator);
 
